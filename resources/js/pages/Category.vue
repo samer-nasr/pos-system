@@ -10,43 +10,43 @@ import Swal from 'sweetalert2';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Items',
-        href: '/items',
+        title: 'Categories',
+        href: '/Categories',
     },
 ];
 
 const form = useForm({
     name: '',
-    price: '',
-    quantity: '',
+    // price: '',
+    // quantity: '',
 });
 
 const showSuccessAlert = () => {
     Swal.fire({
         title: 'Success!',
-        text: 'Item created successfully.',
+        text: 'Category created successfully.',
         icon: 'success',
         confirmButtonText: 'OK',
     });
 };
 
 const submit = () => {
-    form.post(route('items.store'), {
+    form.post(route('category.store'), {
         onSuccess: () => {
             showSuccessAlert();
-            form.reset('name', 'price','quantity');
+            form.reset('name');
         },
     });
 };
 </script>
 
 <template>
-    <Head title="Items" />
+    <Head title="Categories" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <form @submit.prevent="submit">
-                <h2 class="text-center mb-4">Create new item</h2>
+                <h2 class="text-center mb-4">Create new category</h2>
                 <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name</Label>
@@ -54,7 +54,7 @@ const submit = () => {
                     <InputError :message="form.errors.name" />
                 </div>
 
-                <div class="grid gap-2">
+                <!-- <div class="grid gap-2">
                     <Label for="price">Price</Label>
                     <Input id="price" type="number" required :tabindex="2" autocomplete="price" v-model="form.price" placeholder="$100" />
                     <InputError :message="form.errors.price" />
@@ -72,11 +72,11 @@ const submit = () => {
                         placeholder="Quantity"
                     />
                     <InputError :message="form.errors.quantity" />
-                </div>
+                </div> -->
 
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Create item
+                    Create category
                 </Button>
             </div>
 

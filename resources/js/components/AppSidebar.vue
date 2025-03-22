@@ -15,10 +15,15 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Items',
-        href: '/items',
-        icon: ShoppingCart,
+        title: 'Category',
+        href: '/category/create',
+        icon: LayoutGrid,
     },
+    {
+        title: 'Items',
+        href: '/items/create',
+        icon: ShoppingCart,
+    },  
 ];
 
 const footerNavItems: NavItem[] = [

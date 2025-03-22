@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Items;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class ItemsController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -22,7 +22,7 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Items');
+        return Inertia::render('Category');
     }
 
     /**
@@ -30,31 +30,29 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:50',
-            'price'=> 'required|numeric',
-            'quantity'=> 'required|numeric',
         ]);
 
         DB::beginTransaction();
-
+        
         try
         {
-            Items::create($request->all());
+            Category::create($request->all());
             DB::commit();
+
         }
         catch(\Exception $e)
         {
-            dd($e);
             DB::rollBack();
+            dd($e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Items $items)
+    public function show(Category $category)
     {
         //
     }
@@ -62,7 +60,7 @@ class ItemsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Items $items)
+    public function edit(Category $category)
     {
         //
     }
@@ -70,7 +68,7 @@ class ItemsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Items $items)
+    public function update(Request $request, Category $category)
     {
         //
     }
@@ -78,7 +76,7 @@ class ItemsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Items $items)
+    public function destroy(Category $category)
     {
         //
     }
