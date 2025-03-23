@@ -3,20 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Items;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class ItemsController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -24,9 +22,7 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        $brands = Brand::all();
-        return Inertia::render('Items' , ['categories' => $categories , 'brands' => $brands]);
+        return Inertia::render('Brand');
     }
 
     /**
@@ -34,39 +30,28 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:50',
-            'price'=> 'required|numeric',
-            'quantity'=> 'required|numeric',
-            'category'=> 'required|exists:categories,id|numeric',
-            'brand'=> 'required|exists:brands,id|numeric',
         ]);
 
         DB::beginTransaction();
 
         try
         {
-            Items::create([
-                'name' => $request->name,
-                'price'=> $request->price,
-                'quantity'=> $request->quantity,
-                'category_id'=>$request->category,
-                'brand_id'=>$request->brand,
-            ]);
+            Brand::create($request->all());
             DB::commit();
         }
         catch(\Exception $e)
         {
-            dd($e);
             DB::rollBack();
+            dd($e->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Items $items)
+    public function show(Brand $brand)
     {
         //
     }
@@ -74,7 +59,7 @@ class ItemsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Items $items)
+    public function edit(Brand $brand)
     {
         //
     }
@@ -82,7 +67,7 @@ class ItemsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Items $items)
+    public function update(Request $request, Brand $brand)
     {
         //
     }
@@ -90,7 +75,7 @@ class ItemsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Items $items)
+    public function destroy(Brand $brand)
     {
         //
     }

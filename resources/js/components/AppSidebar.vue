@@ -24,6 +24,11 @@ const mainNavItems: NavItem[] = [
         href: '/items/create',
         icon: ShoppingCart,
     },  
+    {
+        title: 'Brands',
+        href: '/brands/create',
+        icon: ShoppingCart,
+    },  
 ];
 
 const footerNavItems: NavItem[] = [

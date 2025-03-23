@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemsController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('items', ItemsController::class);
     Route::resource('category', CategoryController::class);
+    Route::resource('brands', BrandController::class);
 });
 
 require __DIR__.'/settings.php';

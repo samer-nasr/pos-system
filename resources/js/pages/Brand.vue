@@ -8,52 +8,45 @@ import { Button } from '@/components/ui/button';
 import InputError from '@/components/InputError.vue';
 import Swal from 'sweetalert2';
 
-const props = defineProps<{
-    categories: { name: string , id: number}[];
-    brands: { name: string , id: number}[];
-}>();
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Items',
-        href: '/items',
+        title: 'Brands',
+        href: '/brands',
     },
 ];
 
 const form = useForm({
     name: '',
-    price: '',
-    quantity: '',
-    category:'',
-    brand:'',
+    // price: '',
+    // quantity: '',
 });
 
 const showSuccessAlert = () => {
     Swal.fire({
         title: 'Success!',
-        text: 'Item created successfully.',
+        text: 'Brand created successfully.',
         icon: 'success',
         confirmButtonText: 'OK',
     });
 };
 
 const submit = () => {
-    form.post(route('items.store'), {
+    form.post(route('brands.store'), {
         onSuccess: () => {
             showSuccessAlert();
-            form.reset('name', 'price','quantity');
+            form.reset('name');
         },
     });
 };
 </script>
 
 <template>
-    <Head title="Items" />
+    <Head title="Brands" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <form @submit.prevent="submit">
-                <h2 class="text-center mb-4">Create new item</h2>
+                <h2 class="text-center mb-4">Create new brand</h2>
                 <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name</Label>
@@ -61,31 +54,9 @@ const submit = () => {
                     <InputError :message="form.errors.name" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="category">Category</Label>
-                    <select id="category" :tabindex="2" autocomplete="category" v-model="form.category" class="text-black">
-                        <option value="">Select a category</option>
-                        <option v-for="category in props.categories" :key="category.id" :value="category.id">
-                            {{ category.name }}
-                        </option>
-                    </select>
-                    <InputError :message="form.errors.category" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="brand">Brand</Label>
-                    <select id="brand" :tabindex="3" autocomplete="brand" v-model="form.brand" class="text-black">
-                        <option value="">Select a brand</option>
-                        <option v-for="brand in props.brands" :key="brand.id" :value="brand.id">
-                            {{ brand.name }}
-                        </option>
-                    </select>
-                    <InputError :message="form.errors.brand" />
-                </div>
-
-                <div class="grid gap-2">
+                <!-- <div class="grid gap-2">
                     <Label for="price">Price</Label>
-                    <Input id="price" type="number" required :tabindex="4" autocomplete="price" v-model="form.price" placeholder="$100" />
+                    <Input id="price" type="number" required :tabindex="2" autocomplete="price" v-model="form.price" placeholder="$100" />
                     <InputError :message="form.errors.price" />
                 </div>
 
@@ -101,11 +72,11 @@ const submit = () => {
                         placeholder="Quantity"
                     />
                     <InputError :message="form.errors.quantity" />
-                </div>
+                </div> -->
 
-                <Button type="submit" class="mt-2 w-full" :tabindex="5" :disabled="form.processing">
+                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Create item
+                    Create brand
                 </Button>
             </div>
 
