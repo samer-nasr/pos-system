@@ -14,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::all();
+        return Inertia::render('category/List', ['categories' => $categories]);
     }
 
     /**
@@ -22,7 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Category');
+        return Inertia::render('category/Create');
     }
 
     /**

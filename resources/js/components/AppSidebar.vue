@@ -16,7 +16,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Category',
-        href: '/category/create',
+        href: '/category',
         icon: LayoutGrid,
     },
     {
