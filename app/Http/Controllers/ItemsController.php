@@ -16,7 +16,8 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        
+        $items = Items::with('brand', 'category')->where('is_deleted' , DB::raw(0))->get();
+        return Inertia::render('item/List', ['items' => $items]);
     }
 
     /**
@@ -24,9 +25,9 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        $brands = Brand::all();
-        return Inertia::render('Items' , ['categories' => $categories , 'brands' => $brands]);
+        $categories = Category::where('is_deleted' , DB::raw(0))->get();
+        $brands = Brand::where('is_deleted' , DB::raw(0))->get();
+        return Inertia::render('item/Create' , ['categories' => $categories , 'brands' => $brands]);
     }
 
     /**
@@ -90,8 +91,20 @@ class ItemsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Items $items)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try
+        {
+            $item = Items::find($id);
+            $item->is_deleted = 1;
+            $item->save();
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 }

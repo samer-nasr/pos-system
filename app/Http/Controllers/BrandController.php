@@ -14,7 +14,8 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        $brands = Brand::where('is_deleted' , DB::raw(0))->get();
+        return Inertia::render('brand/List', ['brands' => $brands]);    
     }
 
     /**
@@ -22,7 +23,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Brand');
+        return Inertia::render('brand/Create');
     }
 
     /**
@@ -40,6 +41,7 @@ class BrandController extends Controller
         {
             Brand::create($request->all());
             DB::commit();
+            return $this->index();
         }
         catch(\Exception $e)
         {
@@ -75,8 +77,20 @@ class BrandController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Brand $brand)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try
+        {
+            $brand = Brand::find($id);
+            $brand->is_deleted = 1;
+            $brand->save();
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 }

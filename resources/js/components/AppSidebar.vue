@@ -21,12 +21,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Items',
-        href: '/items/create',
+        href: '/items',
         icon: ShoppingCart,
     },  
     {
         title: 'Brands',
-        href: '/brands/create',
+        href: '/brands',
         icon: ShoppingCart,
     },  
 ];

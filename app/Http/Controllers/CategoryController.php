@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::where('is_deleted' , DB::raw(0))->get();
         return Inertia::render('category/List', ['categories' => $categories]);
     }
 
@@ -77,8 +77,21 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try
+        {
+            $category = Category::find($id);
+            $category->is_deleted = 1;
+            $category->save();
+            DB::commit();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+    
     }
 }

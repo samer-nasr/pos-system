@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('price');
-            $table->integer('qunatity');
+            $table->integer('quantity');
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('brand_id');
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }
