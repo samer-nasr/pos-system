@@ -29,6 +29,10 @@ const deleteCategory = (categoryId: number): void => {
         });
     }
 };
+
+const editCategory = (categoryId: number): void => {
+    router.get(route('category.edit', categoryId));
+};
 </script>
 
 <template>
@@ -59,9 +63,12 @@ const deleteCategory = (categoryId: number): void => {
                             class="border border-gray-200 hover:bg-gray-50 transition"
                         >
                             <td class="px-4 py-2 text-gray-700">{{ category.name }}</td>
-                            <td class="px-4 py-2 text-center">
+                            <td class="px-4 py-2 text-center space-x-2">
                                 <Button variant="destructive" size="sm" @click="deleteCategory(category.id)">
                                     Delete
+                                </Button>
+                                <Button variant="secondary" size="sm" @click="editCategory(category.id)">
+                                    Edit
                                 </Button>
                             </td>
                         </tr>

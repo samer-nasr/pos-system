@@ -25,8 +25,12 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_deleted' , DB::raw(0))->get();
-        $brands = Brand::where('is_deleted' , DB::raw(0))->get();
+        $categories = Category::where('is_deleted' , DB::raw(0))
+                                ->where('is_deleted' , DB::raw(0))
+                                ->get();
+        $brands = Brand::where('is_deleted' , DB::raw(0))
+                                ->where('is_deleted' , DB::raw(0))
+                                ->get();
         return Inertia::render('item/Create' , ['categories' => $categories , 'brands' => $brands]);
     }
 
@@ -56,6 +60,7 @@ class ItemsController extends Controller
                 'brand_id'=>$request->brand,
             ]);
             DB::commit();
+            return $this->index();
         }
         catch(\Exception $e)
         {
@@ -75,17 +80,57 @@ class ItemsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Items $items)
+    public function edit($id)
     {
-        //
+        // $item = Items::with('brand' , 'category')
+        //                 ->where('id' , $id)
+        //                 ->get();
+
+        $item = Items::with('brand', 'category')->find($id);
+
+        // dd($item);
+
+        $categories = Category::where('is_deleted' , DB::raw(0))
+                                ->where('is_deleted' , DB::raw(0))
+                                ->get();
+        $brands = Brand::where('is_deleted' , DB::raw(0))
+                                ->where('is_deleted' , DB::raw(0))
+                                ->get();
+
+        return Inertia::render('item/Edit', ['item' => $item, 'categories' => $categories , 'brands' => $brands]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Items $items)
+    public function update(Request $request, Items $item)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'price'=> 'required|numeric',
+            'quantity'=> 'required|numeric',
+            'category'=> 'required|exists:categories,id|numeric',
+            'brand'=> 'required|exists:brands,id|numeric',
+        ]);
+
+        DB::beginTransaction();
+
+        try
+        {
+            $item->name = $request->name;
+            $item->price = $request->price;
+            $item->quantity = $request->quantity;
+            $item->category_id = $request->category;
+            $item->brand_id = $request->brand;
+            $item->save();
+            DB::commit();
+            return $this->index();
+        }
+        catch(\Exception $e)
+        {
+            dd($e->getMessage());
+            DB::rollBack();
+        }
     }
 
     /**

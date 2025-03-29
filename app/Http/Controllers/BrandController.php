@@ -61,9 +61,10 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Brand $brand)
+    public function edit($id)
     {
-        //
+        $brand = Brand::find($id);
+        return Inertia::render('brand/Edit', ['brand' => $brand]);
     }
 
     /**
@@ -71,7 +72,24 @@ class BrandController extends Controller
      */
     public function update(Request $request, Brand $brand)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        DB::beginTransaction();
+
+        try
+        {
+            $brand->name = $request->name;
+            $brand->save();
+            DB::commit();
+            return $this->index();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 
     /**

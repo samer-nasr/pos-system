@@ -29,6 +29,10 @@ const deleteBrand = (brandId: number): void => {
         });
     }
 };
+
+const editBrand = (brandId: number): void => {
+    router.get(route('brands.edit', brandId));
+};
 </script>
 
 <template>
@@ -59,9 +63,12 @@ const deleteBrand = (brandId: number): void => {
                             class="border border-gray-200 hover:bg-gray-50 transition"
                         >
                             <td class="px-4 py-2 text-gray-700">{{ brand.name }}</td>
-                            <td class="px-4 py-2 text-center">
+                            <td class="px-4 py-2 text-center space-x-2  ">
                                 <Button variant="destructive" size="sm" @click="deleteBrand(brand.id)">
                                     Delete
+                                </Button>
+                                <Button variant="secondary" size="sm" @click="editBrand(brand.id)">
+                                    Edit
                                 </Button>
                             </td>
                         </tr>

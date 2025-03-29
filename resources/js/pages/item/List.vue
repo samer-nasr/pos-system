@@ -32,6 +32,10 @@ const deleteItem = (itemsId: number): void => {
         });
     }
 };
+
+const editItem = (itemId: number): void => {
+    router.get(route('items.edit' , itemId));
+}
 </script>
 
 <template>
@@ -70,9 +74,12 @@ const deleteItem = (itemsId: number): void => {
                             <td class="px-4 py-2 text-gray-700">{{ item.quantity }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ item.category.name }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ item.brand.name }}</td>
-                            <td class="px-4 py-2 text-center">
+                            <td class="px-4 py-2 text-center space-x-2">
                                 <Button variant="destructive" size="sm" @click="deleteItem(item.id)">
                                     Delete
+                                </Button>
+                                <Button variant="secondary" size="sm" @click="editItem(item.id)">
+                                    Edit
                                 </Button>
                             </td>
                         </tr>

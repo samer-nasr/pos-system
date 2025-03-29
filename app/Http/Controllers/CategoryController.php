@@ -41,7 +41,7 @@ class CategoryController extends Controller
         {
             Category::create($request->all());
             DB::commit();
-
+            return $this->index();
         }
         catch(\Exception $e)
         {
@@ -61,9 +61,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $category = Category::find($id);
+        return Inertia::render('category/Edit',['category' => $category]);
     }
 
     /**
@@ -71,7 +72,26 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        DB::beginTransaction();
+
+        try
+        {
+            $category->name = $request->name;
+            $category->save();
+
+            DB::commit();
+            return $this->index();
+        }
+        catch(\Exception $e)
+        {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+        
     }
 
     /**
