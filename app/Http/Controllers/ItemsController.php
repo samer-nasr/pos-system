@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ItemExport;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Items;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ItemsController extends Controller
 {
@@ -32,6 +34,12 @@ class ItemsController extends Controller
                                 ->where('is_deleted' , DB::raw(0))
                                 ->get();
         return Inertia::render('item/Create' , ['categories' => $categories , 'brands' => $brands]);
+    }
+
+    public function export()
+    {
+        $items = Items::with('brand' , 'category')->where('is_deleted' , DB::raw(0))->get();
+        return Excel::download(new ItemExport($items), 'items.xlsx');
     }
 
     /**
@@ -82,13 +90,8 @@ class ItemsController extends Controller
      */
     public function edit($id)
     {
-        // $item = Items::with('brand' , 'category')
-        //                 ->where('id' , $id)
-        //                 ->get();
-
         $item = Items::with('brand', 'category')->find($id);
 
-        // dd($item);
 
         $categories = Category::where('is_deleted' , DB::raw(0))
                                 ->where('is_deleted' , DB::raw(0))

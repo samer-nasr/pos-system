@@ -20,6 +20,10 @@ const goToCreateItem = () => {
     router.get(route('items.create'));
 };
 
+const exportItem = () => {
+    window.location.href = route('items.export');
+}
+
 const deleteItem = (itemsId: number): void => {
     if (confirm("Are you sure you want to delete this item?")) {
         router.delete(route('items.destroy', itemsId), {
@@ -44,9 +48,14 @@ const editItem = (itemId: number): void => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="">
             <h2 class="text-xl font-semibold text-center">Items</h2>
-            <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateItem">
+            <div class="flex justify-between px-4">
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateItem">
                                     Create Item
-            </Button>
+                </Button>
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="exportItem">
+                                        Export Items
+                </Button>
+            </div>
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
             <h2 class="text-center text-xl font-semibold mb-4">Items List</h2>

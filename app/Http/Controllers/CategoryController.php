@@ -30,7 +30,8 @@ class CategoryController extends Controller
 
     public function export()
     {
-        return Excel::download(new CategoryExport , 'categories.xlsx');
+        $categories = Category::where('is_deleted' , DB::raw(0))->get();
+        return Excel::download(new CategoryExport($categories) , 'categories.xlsx');
     }
 
     /**

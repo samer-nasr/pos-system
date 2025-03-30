@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BrandExport;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BrandController extends Controller
 {
@@ -24,6 +26,12 @@ class BrandController extends Controller
     public function create()
     {
         return Inertia::render('brand/Create');
+    }
+
+    public function export()
+    {
+        $brands = Brand::where('is_deleted' , DB::raw(0))->get();
+        return Excel::download(new BrandExport($brands) , 'brands.xlsx');
     }
 
     /**

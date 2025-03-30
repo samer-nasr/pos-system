@@ -14,7 +14,7 @@ const props = defineProps<{
 }>();
 
 const goToCreateCategory = () => {
-    // router.get(route('category.export'));
+    router.get(route('category.create'));
 };
 
 const exportCategory = () => {
@@ -50,7 +50,7 @@ const editCategory = (categoryId: number): void => {
                                     Create Category
                 </Button>
                 <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="exportCategory">
-                                        Export Category
+                                        Export Categories
                 </Button>
             </div>
         </div>

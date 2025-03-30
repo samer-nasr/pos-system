@@ -17,6 +17,10 @@ const goToCreateBrand = () => {
     router.get(route('brands.create'));
 };
 
+const exportBrand = () => {
+    window.location.href = route('brands.export');
+};
+
 const deleteBrand = (brandId: number): void => {
     if (confirm("Are you sure you want to delete this brand?")) {
         router.delete(route('brands.destroy', brandId), {
@@ -41,9 +45,14 @@ const editBrand = (brandId: number): void => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="">
             <h2 class="text-xl font-semibold text-center">Brands</h2>
-            <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateBrand">
+            <div class="flex justify-between px-4">
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateBrand">
                                     Create Brand
-            </Button>
+                </Button>
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="exportBrand">
+                                        Export Brands
+                </Button>
+            </div>
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
             <h2 class="text-center text-xl font-semibold mb-4">Brand List</h2>
