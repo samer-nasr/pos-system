@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('items', ItemsController::class);
+    Route::get('category/export' , [CategoryController::class , 'export'])->name('category.export');
     Route::resource('category', CategoryController::class);
     Route::resource('brands', BrandController::class);
 });

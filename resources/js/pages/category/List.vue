@@ -14,7 +14,11 @@ const props = defineProps<{
 }>();
 
 const goToCreateCategory = () => {
-    router.get(route('category.create'));
+    // router.get(route('category.export'));
+};
+
+const exportCategory = () => {
+    window.location.href = route('category.export');
 };
 
 const deleteCategory = (categoryId: number): void => {
@@ -41,9 +45,14 @@ const editCategory = (categoryId: number): void => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="">
             <h2 class="text-xl font-semibold text-center">Categories</h2>
-            <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateCategory">
+            <div class="flex justify-between px-4">
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateCategory">
                                     Create Category
-            </Button>
+                </Button>
+                <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="exportCategory">
+                                        Export Category
+                </Button>
+            </div>
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
             <h2 class="text-center text-xl font-semibold mb-4">Category List</h2>

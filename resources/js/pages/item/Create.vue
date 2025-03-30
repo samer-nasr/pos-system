@@ -63,7 +63,7 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="category">Category</Label>
-                    <select id="category" :tabindex="2" autocomplete="category" v-model="form.category" class="text-black">
+                    <select id="category" :tabindex="2" autocomplete="category" v-model="form.category" class="text-black h-8 rounded-lg px-1">
                         <option value="">Select a category</option>
                         <option v-for="category in props.categories" :key="category.id" :value="category.id">
                             {{ category.name }}
@@ -74,7 +74,7 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="brand">Brand</Label>
-                    <select id="brand" :tabindex="3" autocomplete="brand" v-model="form.brand" class="text-black">
+                    <select id="brand" :tabindex="3" autocomplete="brand" v-model="form.brand" class="text-black h-8 rounded-lg px-1">
                         <option value="">Select a brand</option>
                         <option v-for="brand in props.brands" :key="brand.id" :value="brand.id">
                             {{ brand.name }}
