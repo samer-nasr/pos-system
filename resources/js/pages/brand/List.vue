@@ -23,7 +23,7 @@ const deleteBrand = (brandId: number): void => {
             onSuccess: () => {
                 alert("Brand deleted successfully!");
             },
-            onError: (error: unknown) => {
+            onError: () => {
                 alert("Failed to delete the brand.");
             }
         });

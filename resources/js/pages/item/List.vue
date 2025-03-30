@@ -26,7 +26,7 @@ const deleteItem = (itemsId: number): void => {
             onSuccess: () => {
                 alert("item deleted successfully!");
             },
-            onError: (error: unknown) => {
+            onError: () => {
                 alert("Failed to delete the item.");
             }
         });

@@ -27,7 +27,7 @@ const deleteCategory = (categoryId: number): void => {
             onSuccess: () => {
                 alert("Category deleted successfully!");
             },
-            onError: (error: unknown) => {
+            onError: () => {
                 alert("Failed to delete the category.");
             }
         });
