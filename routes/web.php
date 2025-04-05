@@ -15,10 +15,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('items/export' , [ItemsController::class , 'export'])->name('items.export');
+
     Route::resource('items', ItemsController::class);
     Route::get('category/export' , [CategoryController::class , 'export'])->name('category.export');
+    Route::post('category/import' , [CategoryController::class , 'import'])->name('category.import');
     Route::resource('category', CategoryController::class);
     Route::get('brands/export' , [BrandController::class , 'export'])->name('brands.export');
+    Route::post('brands/import' , [BrandController::class , 'import'])->name('brands.import');
     Route::resource('brands', BrandController::class);
 });
 

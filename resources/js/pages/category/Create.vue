@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head , useForm} from '@inertiajs/vue3';
+import { Head , useForm, router  } from '@inertiajs/vue3';
 import { Input } from '@/components/ui/input';
 import { LoaderCircle } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/InputError.vue';
 import Swal from 'sweetalert2';
+import { ref ,type Ref} from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,9 +18,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const form = useForm({
     name: '',
-    // price: '',
-    // quantity: '',
 });
+
+const file: Ref<File | null> = ref(null);
+
+const handleFileChange = (event: Event) => {
+    const input = event.target as HTMLInputElement; // Type assertion
+    if (input?.files?.[0]) {
+        file.value = input.files[0];
+    }
+};
 
 const showSuccessAlert = () => {
     Swal.fire({
@@ -29,6 +37,23 @@ const showSuccessAlert = () => {
         confirmButtonText: 'OK',
     });
 };
+
+const importCategories = () => {
+    if(!file.value) return alert("Please select a file");
+
+    let formData = new FormData();
+    formData.append('file' , file.value);
+
+    router.post(route('category.import'), formData ,{
+        onSuccess: () => {
+            showSuccessAlert();
+            file.value = null;
+        },
+        onError: (errors) => {
+        console.error(errors);
+        },
+    });
+}
 
 const submit = () => {
     form.post(route('category.store'), {
@@ -54,26 +79,6 @@ const submit = () => {
                     <InputError :message="form.errors.name" />
                 </div>
 
-                <!-- <div class="grid gap-2">
-                    <Label for="price">Price</Label>
-                    <Input id="price" type="number" required :tabindex="2" autocomplete="price" v-model="form.price" placeholder="$100" />
-                    <InputError :message="form.errors.price" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="quantity">Quantity</Label>
-                    <Input
-                        id="quantity"
-                        type="number"
-                        required
-                        :tabindex="3"
-                        autocomplete="quantity"
-                        v-model="form.quantity"
-                        placeholder="Quantity"
-                    />
-                    <InputError :message="form.errors.quantity" />
-                </div> -->
-
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Create category
@@ -81,6 +86,17 @@ const submit = () => {
             </div>
 
             </form>
+
+            <form @submit.prevent="importCategories" enctype="multipart/form-data">
+                <div class="mt-10 flex flex-col  items-center gap-4 border-2 border-white py-8">
+                        <h2 class="text-center text-xl font-semibold mb-4">Import Excel</h2>
+                        <input @change="handleFileChange"  type="file" ref="file" class="border-2 border-gray-300 rounded p-2 w-64" />
+                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            Import Categories
+                        </button>
+                </div>
+            </form>
+
         </div>
     </AppLayout>
 </template>

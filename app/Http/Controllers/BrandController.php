@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\BrandExport;
+use App\Imports\BrandImport;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,16 @@ class BrandController extends Controller
     {
         $brands = Brand::where('is_deleted' , DB::raw(0))->get();
         return Excel::download(new BrandExport($brands) , 'brands.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+         $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        // Import the categories from the uploaded file
+        Excel::import(new BrandImport, $request->file('file'));
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CategoryExport;
+use App\Imports\CategoryImport;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,16 @@ class CategoryController extends Controller
     {
         $categories = Category::where('is_deleted' , DB::raw(0))->get();
         return Excel::download(new CategoryExport($categories) , 'categories.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+         $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        // Import the categories from the uploaded file
+        Excel::import(new CategoryImport, $request->file('file'));
     }
 
     /**

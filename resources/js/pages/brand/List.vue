@@ -60,7 +60,7 @@ const editBrand = (brandId: number): void => {
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-200 rounded-lg">
                     <thead>
-                        <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
+                        <tr class="bg-gray-300 text-gray-700 uppercase text-sm font-semibold">
                             <th class="border border-gray-200 px-4 py-2 text-left">Name</th>
                             <th class="border border-gray-200 px-4 py-2 text-center">Action</th>
                         </tr>
@@ -69,7 +69,8 @@ const editBrand = (brandId: number): void => {
                         <tr 
                             v-for="brand in props.brands" 
                             :key="brand.id"
-                            class="border border-gray-200 hover:bg-gray-50 transition"
+                            class="border border-gray-200 hover:bg-gray-50 transition odd:bg-white even:bg-gray-200"
+
                         >
                             <td class="px-4 py-2 text-gray-700">{{ brand.name }}</td>
                             <td class="px-4 py-2 text-center space-x-2  ">

@@ -63,7 +63,7 @@ const editItem = (itemId: number): void => {
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-200 rounded-lg">
                     <thead>
-                        <tr class="bg-gray-100 text-gray-700 uppercase text-sm font-semibold">
+                        <tr class="bg-gray-300 text-gray-700 uppercase text-sm font-semibold">
                             <th class="border border-gray-200 px-4 py-2 text-left">Name</th>
                             <th class="border border-gray-200 px-4 py-2 text-left">Price</th>
                             <th class="border border-gray-200 px-4 py-2 text-left">Quantity</th>
@@ -76,7 +76,8 @@ const editItem = (itemId: number): void => {
                         <tr 
                             v-for="item in props.items" 
                             :key="item.id"
-                            class="border border-gray-200 hover:bg-gray-50 transition"
+                            class="border border-gray-200 hover:bg-gray-50 transition odd:bg-white even:bg-gray-200"
+
                         >
                             <td class="px-4 py-2 text-gray-700">{{ item.name }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ item.price }}</td>
