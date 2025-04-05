@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,6 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::get('items/export' , [ItemsController::class , 'export'])->name('items.export');
+
+    Route::resource('users', UserController::class);
 
     Route::resource('items', ItemsController::class);
     Route::get('category/export' , [CategoryController::class , 'export'])->name('category.export');

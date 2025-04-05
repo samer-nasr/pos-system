@@ -58,7 +58,7 @@ const editItem = (itemId: number): void => {
             </div>
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
-            <h2 class="text-center text-xl font-semibold mb-4">Items List</h2>
+            <h2 class="text-center text-xl font-semibold mb-4 text-gray-700">Items List</h2>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-200 rounded-lg">
