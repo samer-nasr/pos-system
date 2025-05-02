@@ -62,9 +62,11 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit( $id)
     {
-        //
+        return inertia('user/Edit', [
+            'user' => User::find($id),
+        ]);
     }
 
     /**
@@ -72,7 +74,17 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class.',email,'.$user->id,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     /**
