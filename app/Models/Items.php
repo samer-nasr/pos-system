@@ -14,6 +14,7 @@ class Items extends Model
         'price',
         'quantity',
         'category_id',
+        'bar_code',
         'brand_id',
     ];
     /** @use HasFactory<\Database\Factories\ItemsFactory> */

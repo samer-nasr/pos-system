@@ -54,6 +54,7 @@ class ItemsController extends Controller
             'quantity'=> 'required|numeric',
             'category'=> 'required|exists:categories,id|numeric',
             'brand'=> 'required|exists:brands,id|numeric',
+            'bar_code' => 'required|string|min:3|unique:items,bar_code'
         ]);
 
         DB::beginTransaction();
@@ -66,6 +67,7 @@ class ItemsController extends Controller
                 'quantity'=> $request->quantity,
                 'category_id'=>$request->category,
                 'brand_id'=>$request->brand,
+                'bar_code'=> $request->bar_code
             ]);
             DB::commit();
             return $this->index();
@@ -125,6 +127,7 @@ class ItemsController extends Controller
             $item->quantity = $request->quantity;
             $item->category_id = $request->category;
             $item->brand_id = $request->brand;
+            $item->bar_code = $request->bar_code;
             $item->save();
             DB::commit();
             return $this->index();

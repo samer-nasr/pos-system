@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -12,9 +13,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Route::get('dashboard', function () {
+    //     return Inertia::render('Dashboard');
+    // })->name('dashboard');
+    // Route::resource('dashboard', DashboardController::class);
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('items/export' , [ItemsController::class , 'export'])->name('items.export');
 
     Route::resource('users', UserController::class);

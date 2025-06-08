@@ -25,6 +25,7 @@ const form = useForm({
     price: '',
     quantity: '',
     category:'',
+    bar_code: '',
     brand:'',
 });
 
@@ -95,12 +96,18 @@ const submit = () => {
                         id="quantity"
                         type="number"
                         required
-                        :tabindex="3"
+                        :tabindex="5"
                         autocomplete="quantity"
                         v-model="form.quantity"
                         placeholder="Quantity"
                     />
                     <InputError :message="form.errors.quantity" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="bar_code">Bar Code</Label>
+                    <Input id="bar_code" type="text" required autofocus :tabindex="6" autocomplete="bar_code" v-model="form.bar_code" placeholder="Bar Code" />
+                    <InputError :message="form.errors.bar_code" />
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" :tabindex="5" :disabled="form.processing">

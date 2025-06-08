@@ -15,7 +15,7 @@ class Category extends Model
 
     public function items()
     {
-        return $this->hasMany(Items::class, 'category_id');
+        return $this->hasMany(Items::class, 'category_id')->where('is_deleted', 0);
     }
     
 }
