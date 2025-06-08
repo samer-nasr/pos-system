@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Menu, Search, ShoppingCart } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -44,6 +44,26 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
+    {
+        title: 'Category',
+        href: '/category',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Items',
+        href: '/items',
+        icon: ShoppingCart,
+    },  
+    {
+        title: 'Brands',
+        href: '/brands',
+        icon: ShoppingCart,
+    },  
+    {
+        title: 'Users',
+        href: '/users',
+        icon: BookOpen,
+    },  
 ];
 
 const rightNavItems: NavItem[] = [
