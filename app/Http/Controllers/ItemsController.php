@@ -6,6 +6,7 @@ use App\Exports\ItemExport;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Items;
+use App\Models\rate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -33,7 +34,12 @@ class ItemsController extends Controller
         $brands = Brand::where('is_deleted' , DB::raw(0))
                                 ->where('is_deleted' , DB::raw(0))
                                 ->get();
-        return Inertia::render('item/Create' , ['categories' => $categories , 'brands' => $brands]);
+        $rates = rate::where('is_deleted', 0)->get();
+        return Inertia::render('item/Create' , [
+            'categories' => $categories , 
+            'brands' => $brands,
+            'rates' => $rates
+        ]);
     }
 
     public function export()
@@ -47,14 +53,15 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd($request->all());    
         $request->validate([
             'name' => 'required|string|max:50',
             'price'=> 'required|numeric',
             'quantity'=> 'required|numeric',
             'category'=> 'required|exists:categories,id|numeric',
             'brand'=> 'required|exists:brands,id|numeric',
-            'bar_code' => 'required|string|min:3|unique:items,bar_code'
+            'bar_code' => 'required|string|min:3|unique:items,bar_code',
+            'rate' => 'nullable|exists:rates,id|numeric'
         ]);
 
         DB::beginTransaction();
@@ -67,7 +74,8 @@ class ItemsController extends Controller
                 'quantity'=> $request->quantity,
                 'category_id'=>$request->category,
                 'brand_id'=>$request->brand,
-                'bar_code'=> $request->bar_code
+                'bar_code'=> $request->bar_code,
+                'rate_id' => $request->rate
             ]);
             DB::commit();
             return $this->index();
@@ -92,7 +100,7 @@ class ItemsController extends Controller
      */
     public function edit($id)
     {
-        $item = Items::with('brand', 'category')->find($id);
+        $item = Items::with('brand', 'category', 'rate')->find($id);
 
 
         $categories = Category::where('is_deleted' , DB::raw(0))
@@ -101,8 +109,15 @@ class ItemsController extends Controller
         $brands = Brand::where('is_deleted' , DB::raw(0))
                                 ->where('is_deleted' , DB::raw(0))
                                 ->get();
+        $rates = rate::where('is_deleted', 0)->get();
+        
 
-        return Inertia::render('item/Edit', ['item' => $item, 'categories' => $categories , 'brands' => $brands]);
+        return Inertia::render('item/Edit', [
+            'item' => $item, 
+            'categories' => $categories , 
+            'brands' => $brands,
+            'rates'=> $rates
+        ]);
     }
 
     /**
@@ -116,6 +131,7 @@ class ItemsController extends Controller
             'quantity'=> 'required|numeric',
             'category'=> 'required|exists:categories,id|numeric',
             'brand'=> 'required|exists:brands,id|numeric',
+            'rate'=> 'required|exists:rates,id|numeric',
         ]);
 
         DB::beginTransaction();
@@ -128,6 +144,7 @@ class ItemsController extends Controller
             $item->category_id = $request->category;
             $item->brand_id = $request->brand;
             $item->bar_code = $request->bar_code;
+            $item->rate_id = $request->rate;
             $item->save();
             DB::commit();
             return $this->index();

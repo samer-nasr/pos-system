@@ -30,6 +30,16 @@ const totalOrderPrice = computed(() => {
   }, 0)
 })
 
+// merge items with selected items
+const mergedItems = computed(() => {
+  return props.items.map(item => {
+    const selected = selectedItems.value.find(i => i.id === item.id)
+    return selected 
+      ? selected 
+      : { ...item, order_quantity: 0 } 
+  })
+})
+
 //load items based on the selected category
 const loadItems = (categoryId: number) => {
   router.get('dashboard', { category_id: categoryId }, { preserveScroll: true, preserveState: true })
@@ -46,8 +56,7 @@ const addItemToOrder = (item: {name: string , id: number , price: number,total_p
     const existing_item = selectedItems.value.find(selectedItem => selectedItem.id === item.id);
     if(existing_item)
     {
-        alert(item.quantity);
-        alert(item.order_quantity);
+        // check if the item is out of stock
         if(item.quantity == item.order_quantity)
         {
             showAlertMessage('Item out of stock!' , 'error');
@@ -194,7 +203,7 @@ onMounted(() => {
                         <div class="grid grid-cols-3 gap-2 mb-2 flex-grow">
                             <button
                             class="bg-blue-100 text-black py-2"
-                            v-for="item in items"
+                            v-for="item in mergedItems"
                             :key="item.id"
                             @click="addItemToOrder(item)"
                             >

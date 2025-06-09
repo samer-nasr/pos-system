@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('brand_id');
+            $table->unsignedInteger('rate_id');
             $table->string('bar_code');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

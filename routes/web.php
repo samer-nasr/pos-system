@@ -4,6 +4,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\RateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('brands/export' , [BrandController::class , 'export'])->name('brands.export');
     Route::post('brands/import' , [BrandController::class , 'import'])->name('brands.import');
     Route::resource('brands', BrandController::class);
+    Route::resource('rates' , RateController::class);
 });
 
 require __DIR__.'/settings.php';

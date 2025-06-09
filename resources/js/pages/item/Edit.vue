@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 const props = defineProps<{
     categories: { name: string; id: number }[];
     brands: { name: string; id: number }[];
+    rates: {id: number, currency: string, counter_currency : string}[];
     item: {
         id: number;
         name: string;
@@ -19,6 +20,7 @@ const props = defineProps<{
         category: { id: number, name:string};
         brand: { id: number, name:string};
         bar_code: string;
+        rate: { id: number, currency:string , counter_currency : string};
     };
 }>();
 
@@ -33,7 +35,8 @@ const form = useForm({
     quantity: props.item.quantity,
     category: props.item.category.id,
     brand: props.item.brand.id,
-    bar_code: props.item.bar_code
+    bar_code: props.item.bar_code,
+    rate: props.item.rate.id
 });
 
 const showSuccessAlert = () => {
@@ -94,26 +97,37 @@ const submit = () => {
                     </div>
 
                     <div class="grid gap-2">
+                        <Label for="rate">Rate</Label>
+                        <select id="rate" :tabindex="4" autocomplete="rate" v-model="form.rate" class="text-black h-8 rounded-lg px-1">
+                            <option value="">Select a rate</option>
+                            <option v-for="rate in props.rates" :key="rate.id" :value="rate.id">
+                                    {{ rate.currency }} - {{ rate.counter_currency }}
+                            </option>
+                        </select>
+                        <InputError :message="form.errors.brand" />
+                    </div>
+
+                    <div class="grid gap-2">
                         <Label for="price">Price</Label>
-                        <Input id="price" type="number" required :tabindex="4" autocomplete="price" v-model="form.price"
+                        <Input id="price" type="number" required :tabindex="5" autocomplete="price" v-model="form.price"
                             placeholder="$100" />
                         <InputError :message="form.errors.price" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="quantity">Quantity</Label>
-                        <Input id="quantity" type="number" required :tabindex="3" autocomplete="quantity"
+                        <Input id="quantity" type="number" required :tabindex="6" autocomplete="quantity"
                             v-model="form.quantity" placeholder="Quantity" />
                         <InputError :message="form.errors.quantity" />
                     </div>
 
                      <div class="grid gap-2">
                         <Label for="bar_code">Bar Code</Label>
-                        <Input id="bar_code" type="text" required autofocus :tabindex="6" autocomplete="bar_code" v-model="form.bar_code" placeholder="Bar Code" />
+                        <Input id="bar_code" type="text" required autofocus :tabindex="7" autocomplete="bar_code" v-model="form.bar_code" placeholder="Bar Code" />
                         <InputError :message="form.errors.bar_code" />
                     </div>
 
-                    <Button type="submit" class="mt-2 w-full" :tabindex="5" :disabled="form.processing">
+                    <Button type="submit" class="mt-2 w-full" :tabindex="8" :disabled="form.processing">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                         Save item
                     </Button>

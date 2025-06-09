@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 const props = defineProps<{
     categories: { name: string , id: number}[];
     brands: { name: string , id: number}[];
+    rates: { currency: string , id: number , counter_currency: string}[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,6 +28,7 @@ const form = useForm({
     category:'',
     bar_code: '',
     brand:'',
+    rate:''
 });
 
 const showSuccessAlert = () => {
@@ -85,8 +87,19 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
+                    <Label for="rate">Rate</Label>
+                    <select id="rate" :tabindex="4" autocomplete="rate" v-model="form.rate" class="text-black h-8 rounded-lg px-1">
+                        <option value="">Select a rate</option>
+                        <option v-for="rate in props.rates" :key="rate.id" :value="rate.id">
+                            {{ rate.currency }} - {{ rate.counter_currency }}
+                        </option>
+                    </select>
+                    <InputError :message="form.errors.rate" />
+                </div>
+
+                <div class="grid gap-2">
                     <Label for="price">Price</Label>
-                    <Input id="price" type="number" required :tabindex="4" autocomplete="price" v-model="form.price" placeholder="$100" />
+                    <Input id="price" type="number" required :tabindex="5" autocomplete="price" v-model="form.price" placeholder="$100" />
                     <InputError :message="form.errors.price" />
                 </div>
 
