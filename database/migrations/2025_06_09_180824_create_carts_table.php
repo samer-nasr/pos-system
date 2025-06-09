@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rates', function (Blueprint $table) {
+        Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->string('currency');
-            $table->string('counter_currency');
-            $table->decimal('rate', 10, 4);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('rate_id');
+            $table->unsignedBigInteger('item_quantity');
+            $table->float('total_price');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rates');
+        Schema::dropIfExists('carts');
     }
 };

@@ -8,6 +8,7 @@ use App\Http\Controllers\RateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use League\CommonMark\Extension\SmartPunct\DashParser;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -19,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // })->name('dashboard');
     // Route::resource('dashboard', DashboardController::class);
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('dashboard/pay', [DashboardController::class, 'pay'])->name('dashboard.pay');
     Route::get('items/export' , [ItemsController::class , 'export'])->name('items.export');
 
     Route::resource('users', UserController::class);

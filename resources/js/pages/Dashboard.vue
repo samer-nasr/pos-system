@@ -86,6 +86,28 @@ const removeItemFromOrder = (item: {name: string , id: number , price: number,to
     selectedItems.value = selectedItems.value.filter(item => item.id !== item.id);
 }
 
+const payCart = () => {
+    alert(selectedItems.value.length);
+    if(!(selectedItems.value.length > 0))
+    {
+        showAlertMessage('Order is empty', 'error');
+    } 
+    else
+    {
+        router.post('dashboard/pay', 
+            {
+                items: selectedItems.value,
+                total_price: totalOrderPrice.value
+            },
+            {
+                onSuccess: () => {
+                    selectedItems.value = [];
+                    showAlertMessage('Payed successfully', 'success');
+            },
+        });
+    }
+}
+
 const updateTime = () => {
   const now = new Date()
   currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -185,19 +207,6 @@ onMounted(() => {
                     </div>
 
                     <!-- Items Section -->
-                    <!-- <div v-else class="grid grid-cols-3 gap-2 mb-2">
-                        <button
-                        class="bg-blue-100 text-black py-2"
-                        v-for="item in items"
-                        :key="item.id"
-                        >
-                        {{ item.name }}
-                        <div class="text-sm text-gray-700">${{ item.price.toFixed(2) }}</div>
-                        </button>
-                        <button @click="router.get('/dashboard')" class="text-sm text-blue-600 underline mb-2">← Back to Categories</button>
-                    </div> -->
-
-                    <!-- Items Section -->
                     <div v-else class="flex flex-col h-full">
                         <!-- Items Grid -->
                         <div class="grid grid-cols-3 gap-2 mb-2 flex-grow">
@@ -243,7 +252,7 @@ onMounted(() => {
                     <button class="bg-red-600 text-white py-2">FOOD</button>
                     <button class="bg-gray-600 text-white py-2">TAKE AWAY</button>
                     <button class="bg-gray-600 text-white py-2">SET MENUS</button>
-                    <button class="bg-white text-black font-bold py-2">PAY</button>
+                    <button class="bg-white text-black font-bold py-2" @click="payCart">PAY</button>
                     <button class="bg-gray-600 text-white py-2">MANAGER PAY</button>
                     <button class="bg-gray-600 text-white py-2">PAID BY APP</button>
                     <button class="bg-gray-600 text-white py-2">LIST</button>
