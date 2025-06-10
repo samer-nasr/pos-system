@@ -15,7 +15,15 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
     categories: { name: string; id: number }[]; 
-    items: { name: string , id : number , price: number, total_price: number , quantity: number, order_quantity: number}[];
+    items: { 
+        name: string , 
+        id : number , 
+        price: number, 
+        total_price: number , 
+        quantity: number, 
+        order_quantity: number,
+        currency: {name: string , code: string, id:number}
+    }[];
     selectedCategory: { name: string; id: number };
     history:
         {
@@ -168,7 +176,7 @@ onMounted(() => {
                             <tbody>
                                 <tr v-for="item in selectedItems" :key="item.id" class="border-b border-gray-200 hover:bg-gray-50 transition">
                                 <td class="px-2 py-3 border-r border-gray-200">{{ item.name }} ({{ item.order_quantity }})</td>
-                                <td class="px-2 py-3 border-r border-gray-200">${{ (item.total_price ?? item.price).toFixed(2) }}</td>
+                                <td class="px-2 py-3 border-r border-gray-200">{{ item.currency.code }} {{ (item.total_price ?? item.price).toFixed(2) }}</td>
                                 <td class="py-3 text-center">
                                     <button @click="removeItemFromOrder(item)" class="text-red-600 hover:text-red-800 font-semibold">
                                     X
@@ -232,7 +240,7 @@ onMounted(() => {
                             @click="addItemToOrder(item)"
                             >
                             {{ item.name }}
-                            <div class="text-sm text-gray-700">${{ item.price.toFixed(2) }}</div>
+                            <div class="text-sm text-gray-700">{{ item.currency.code }} {{ item.price.toFixed(2) }}</div>
                             </button>
                         </div>
 
@@ -247,24 +255,9 @@ onMounted(() => {
 
                 <!-- Right Panel (25%) -->
                 <div class="w-1/4 h-[90vh] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white p-2 flex flex-col gap-2">
-                    <!-- <button class="bg-gray-600 text-white py-2">DRINKS</button>
-                    <button class="bg-red-600 text-white py-2">FOOD</button>
-                    <button class="bg-gray-600 text-white py-2">TAKE AWAY</button>
-                    <button class="bg-gray-600 text-white py-2">SET MENUS</button>
-                    <button class="bg-white text-black font-bold py-2" @click="payCart">PAY</button>
-                    <button class="bg-gray-600 text-white py-2">MANAGER PAY</button>
-                    <button class="bg-gray-600 text-white py-2">PAID BY APP</button>
-                    <button class="bg-gray-600 text-white py-2">LIST</button>
-                    <button class="bg-gray-600 text-white py-2">ENTER NAME</button> -->
+                    
                     <h2 class="text-center text-black">History</h2>
-                    <!-- <ul>
-                        <li v-for="his in props.history" class="text-black">
-                            {{ his.item_quantity }}
-                            <p v-for="item in his.items">
-                                {{ item.item.name }}
-                            </p>
-                        </li>
-                    </ul> -->
+                    
                     <div class="flex-1 bg-gray-50 text-black mb-2 rounded p-2 overflow-auto">
                         <table class="w-full text-sm text-left text-gray-700 border-collapse border border-gray-300 rounded-lg overflow-hidden">
                             <thead class="bg-gray-100 border-b border-gray-300">

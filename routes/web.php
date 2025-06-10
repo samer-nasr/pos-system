@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\RateController;
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('brands/import' , [BrandController::class , 'import'])->name('brands.import');
     Route::resource('brands', BrandController::class);
     Route::resource('rates' , RateController::class);
+    Route::resource('currencies' , CurrencyController::class);
 });
 
 require __DIR__.'/settings.php';

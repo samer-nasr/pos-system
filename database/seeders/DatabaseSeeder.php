@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\Items;
 use App\Models\rate;
 use App\Models\User;
@@ -56,6 +57,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'beer 150 ml',
             'category_id' => 1,
             'brand_id' => 1,
+            'currency_id'=> 1,
             'price'=> 1,
             'rate_id'=> 1,
             'quantity'=> 10,
@@ -66,6 +68,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'chips 50 g',
             'category_id' => 2,
             'brand_id' => 2,
+            'currency_id'=> 1,
             'price'=> 2,
             'rate_id'=> 1,
             'quantity'=> 5,
@@ -76,6 +79,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Corona 50 ml',
             'category_id' => 1,
             'brand_id' => 1,
+            'currency_id'=> 1,
             'price'=> 3,
             'rate_id'=> 1,
             'quantity'=> 10,
@@ -86,10 +90,16 @@ class DatabaseSeeder extends Seeder
             'name' => 'Galaxy 50 g',
             'category_id' => 3,
             'brand_id' => 1,
+            'currency_id'=> 1,
             'price'=> 4,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 102
+        ]);
+
+        Currency::create([
+            'name' => 'USD',
+            'code'=> '$'
         ]);
     }
 }

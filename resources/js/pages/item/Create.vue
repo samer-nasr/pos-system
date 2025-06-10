@@ -12,6 +12,7 @@ const props = defineProps<{
     categories: { name: string , id: number}[];
     brands: { name: string , id: number}[];
     rates: { currency: string , id: number , counter_currency: string}[];
+    currencies: {name: string, code: string, id : number}[];
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,7 +29,8 @@ const form = useForm({
     category:'',
     bar_code: '',
     brand:'',
-    rate:''
+    rate:'',
+    currency:''
 });
 
 const showSuccessAlert = () => {
@@ -97,9 +99,20 @@ const submit = () => {
                     <InputError :message="form.errors.rate" />
                 </div>
 
+                 <div class="grid gap-2">
+                    <Label for="currency">Currency</Label>
+                    <select id="currency" :tabindex="5" autocomplete="currency" v-model="form.currency" class="text-black h-8 rounded-lg px-1">
+                        <option value="">Select a currency</option>
+                        <option v-for="currency in props.currencies" :key="currency.id" :value="currency.id">
+                            {{ currency.code }} - {{ currency.name }}
+                        </option>
+                    </select>
+                    <InputError :message="form.errors.currency" />
+                </div>
+
                 <div class="grid gap-2">
                     <Label for="price">Price</Label>
-                    <Input id="price" type="number" required :tabindex="5" autocomplete="price" v-model="form.price" placeholder="$100" />
+                    <Input id="price" type="number" required :tabindex="6" autocomplete="price" v-model="form.price" placeholder="$100" />
                     <InputError :message="form.errors.price" />
                 </div>
 
@@ -119,11 +132,11 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="bar_code">Bar Code</Label>
-                    <Input id="bar_code" type="text" required autofocus :tabindex="6" autocomplete="bar_code" v-model="form.bar_code" placeholder="Bar Code" />
+                    <Input id="bar_code" type="text" required autofocus :tabindex="7" autocomplete="bar_code" v-model="form.bar_code" placeholder="Bar Code" />
                     <InputError :message="form.errors.bar_code" />
                 </div>
 
-                <Button type="submit" class="mt-2 w-full" :tabindex="5" :disabled="form.processing">
+                <Button type="submit" class="mt-2 w-full" :tabindex="8" :disabled="form.processing">
                     <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                     Create item
                 </Button>

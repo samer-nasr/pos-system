@@ -29,7 +29,7 @@ class DashboardController extends Controller
         // dd($history->toArray());
 
         if ($request->has('category_id') && $request->category_id) {
-            $selectedCategory = Category::with('items')
+            $selectedCategory = Category::with('items', 'items.currency')
                                             ->find($request->category_id);
             $items = $selectedCategory ? $selectedCategory->items : []; 
         }

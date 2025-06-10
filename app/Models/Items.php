@@ -16,7 +16,8 @@ class Items extends Model
         'category_id',
         'bar_code',
         'brand_id',
-        'rate_id'
+        'rate_id',
+        'currency_id'
     ];
     /** @use HasFactory<\Database\Factories\ItemsFactory> */
 
@@ -33,5 +34,10 @@ class Items extends Model
     public function rate()
     {
         return $this->belongsTo(rate::class, 'rate_id');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 }

@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('currencies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('price');
-            $table->integer('quantity');
-            $table->unsignedInteger('category_id');
-            $table->unsignedInteger('brand_id');
-            $table->unsignedInteger('rate_id');
-            $table->unsignedBigInteger('currency_id');
-            $table->string('bar_code');
+            $table->string('name')->unique();
+            $table->string('code')->unique();
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
@@ -31,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('currencies');
     }
 };
