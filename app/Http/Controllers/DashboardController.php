@@ -18,9 +18,15 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::where('is_deleted', 0)->get();
-        $items = [];
-        $selectedCategory = null;
+        $categories         = Category::where('is_deleted', 0)->get();
+        $items              = [];
+        $selectedCategory   = null;
+        $history            = Cart::with('items' , 'items.item')
+                                    ->where('is_deleted' , '=' , 0)
+                                    ->orderBy('id', 'DESC')
+                                    ->take(10)
+                                    ->get();
+        // dd($history->toArray());
 
         if ($request->has('category_id') && $request->category_id) {
             $selectedCategory = Category::with('items')
@@ -29,9 +35,10 @@ class DashboardController extends Controller
         }
         // dd($items->toArray() , $selectedCategory->toArray());
         return Inertia::render('Dashboard', [
-            'categories' => $categories , 
-            'items' => $items,
-            'selectedCategory' => $selectedCategory,
+            'categories'        => $categories , 
+            'items'             => $items,
+            'selectedCategory'  => $selectedCategory,
+            'history'           =>$history
         ]);
     }
 

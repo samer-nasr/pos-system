@@ -42,6 +42,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Chips',
         ]);
 
+        Category::factory()->create([
+            'name' => 'Chocolate',
+        ]);
+
         rate::create([
             'currency' => 'USD',
             'counter_currency'=> 'LBP',
@@ -58,7 +62,7 @@ class DatabaseSeeder extends Seeder
             'bar_code' => 100
         ]);
 
-         Items::factory()->create([
+        Items::factory()->create([
             'name' => 'chips 50 g',
             'category_id' => 2,
             'brand_id' => 2,
@@ -66,6 +70,26 @@ class DatabaseSeeder extends Seeder
             'rate_id'=> 1,
             'quantity'=> 5,
             'bar_code' => 101
+        ]);
+
+        Items::factory()->create([
+            'name' => 'Corona 50 ml',
+            'category_id' => 1,
+            'brand_id' => 1,
+            'price'=> 3,
+            'rate_id'=> 1,
+            'quantity'=> 10,
+            'bar_code' => 102
+        ]);
+
+        Items::factory()->create([
+            'name' => 'Galaxy 50 g',
+            'category_id' => 3,
+            'brand_id' => 1,
+            'price'=> 4,
+            'rate_id'=> 1,
+            'quantity'=> 10,
+            'bar_code' => 102
         ]);
     }
 }
