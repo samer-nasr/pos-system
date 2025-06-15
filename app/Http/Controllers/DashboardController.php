@@ -20,6 +20,7 @@ class DashboardController extends Controller
     {
         $categories         = Category::where('is_deleted', 0)->get();
         $items              = [];
+        $barcode_item       = NULL;
         $selectedCategory   = null;
         $history            = Cart::with('items' , 'items.item')
                                     ->where('is_deleted' , '=' , 0)
@@ -29,16 +30,24 @@ class DashboardController extends Controller
         // dd($history->toArray());
 
         if ($request->has('category_id') && $request->category_id) {
-            $selectedCategory = Category::with('items', 'items.currency')
+            $selectedCategory = Category::with('items', 'items.currency' ,'items.rate')
                                             ->find($request->category_id);
             $items = $selectedCategory ? $selectedCategory->items : []; 
         }
+        if( $request->has('barcode') && $request->barcode)
+        {
+            $barcode_item = Items::with('category', 'brand', 'currency', 'rate')
+                                    ->where('bar_code', $request->barcode)
+                                    ->first() ?? NULL;
+        }
+
         // dd($items->toArray() , $selectedCategory->toArray());
         return Inertia::render('Dashboard', [
             'categories'        => $categories , 
             'items'             => $items,
             'selectedCategory'  => $selectedCategory,
-            'history'           =>$history
+            'history'           => $history,
+            'barcode_item'     => $barcode_item
         ]);
     }
 

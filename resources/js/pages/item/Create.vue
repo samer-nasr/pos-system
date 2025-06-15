@@ -112,7 +112,7 @@ const submit = () => {
 
                 <div class="grid gap-2">
                     <Label for="price">Price</Label>
-                    <Input id="price" type="number" required :tabindex="6" autocomplete="price" v-model="form.price" placeholder="$100" />
+                    <Input id="price" type="number" step="0.01" required :tabindex="6" autocomplete="price" v-model="form.price" placeholder="$100" />
                     <InputError :message="form.errors.price" />
                 </div>
 

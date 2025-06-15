@@ -47,6 +47,14 @@ class DatabaseSeeder extends Seeder
             'name' => 'Chocolate',
         ]);
 
+        Category::factory()->create([
+            'name' => 'Wafers',
+        ]);
+
+        Category::factory()->create([
+            'name' => 'Cigarettes',
+        ]);
+
         rate::create([
             'currency' => 'USD',
             'counter_currency'=> 'LBP',
@@ -62,6 +70,39 @@ class DatabaseSeeder extends Seeder
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 100
+        ]);
+
+         Items::factory()->create([
+            'name' => 'buz 150 ml',
+            'category_id' => 1,
+            'brand_id' => 1,
+            'currency_id'=> 1,
+            'price'=> 1,
+            'rate_id'=> 1,
+            'quantity'=> 10,
+            'bar_code' => 104
+        ]);
+
+         Items::factory()->create([
+            'name' => 'xxl 150 ml',
+            'category_id' => 1,
+            'brand_id' => 1,
+            'currency_id'=> 1,
+            'price'=> 1,
+            'rate_id'=> 1,
+            'quantity'=> 10,
+            'bar_code' => 105
+        ]);
+
+         Items::factory()->create([
+            'name' => 'rex 150 ml',
+            'category_id' => 1,
+            'brand_id' => 1,
+            'currency_id'=> 1,
+            'price'=> 1,
+            'rate_id'=> 1,
+            'quantity'=> 10,
+            'bar_code' => 106
         ]);
 
         Items::factory()->create([
@@ -94,7 +135,7 @@ class DatabaseSeeder extends Seeder
             'price'=> 4,
             'rate_id'=> 1,
             'quantity'=> 10,
-            'bar_code' => 102
+            'bar_code' => 103
         ]);
 
         Currency::create([
