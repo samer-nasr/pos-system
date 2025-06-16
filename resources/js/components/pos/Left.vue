@@ -43,7 +43,7 @@ const handleConfirmed = () => {
     payCart();
 }
 
-const emit = defineEmits(['payCart','removeItemFromOrder' ,'handleBarcodeChange']);
+const emit = defineEmits(['payCart','removeItemFromOrder' ,'handleBarcodeChange', 'addItemToOrder']);
 
 const removeItemFromOrder = (item: typeof props.selectedItems[0]) => {
     emit('removeItemFromOrder' , item);
@@ -58,6 +58,35 @@ const handleBarcodeChange = () => {
     {
         emit('handleBarcodeChange' , barcode.value);
         barcode.value = '';
+    }
+}
+
+const changeItemQuantity = (item: typeof props.selectedItems[0], event: Event) => {
+    const input = event.target as HTMLInputElement;
+    const newQuantity = parseInt(input.value, 10);
+
+    if (isNaN(newQuantity) || newQuantity < 0) {
+        input.value = item.order_quantity.toString(); // Reset to previous value if invalid
+        return;
+    }
+    // check if new quantity > current quantity add items
+    if(newQuantity > item.order_quantity)
+    {
+        const itemsNbToAdd = newQuantity - item.order_quantity;
+        if(newQuantity > item.quantity)  input.value = item.quantity.toString();
+        for(let i = 0; i < itemsNbToAdd; i++)
+        {
+            emit('addItemToOrder', item);
+        }
+    }
+    // check if new quantity < currenct quantity remove items
+    else if(newQuantity < item.order_quantity)
+    {
+        const itemsNbToRemove = item.order_quantity - newQuantity;
+        for(let i = 0; i < itemsNbToRemove; i++)
+        {
+            emit('removeItemFromOrder', item);
+        }
     }
 }
 
@@ -102,7 +131,19 @@ onMounted(() => {
                             </thead>
                             <tbody>
                                 <tr v-for="item in selectedItems" :key="item.id" class="border-b border-gray-200 hover:bg-gray-50 transition">
-                                <td class="px-2 py-3 border-r border-gray-200">{{ item.name }} ({{ item.order_quantity }})</td>
+                                <td class="px-2 py-3 border-r border-gray-200 flex space-x-2">
+                                    <p>
+                                        {{ item.name }} 
+                                        <!-- ({{ item.order_quantity }})  -->
+                                    </p>
+                                    <input 
+                                        type="number" 
+                                        class="w-10 text-center border border-gray-500 rounded" 
+                                        :value="item.order_quantity"
+                                        @change="changeItemQuantity(item , $event)"
+                                    >
+                                    <span> X</span>
+                                </td>
                                 <td class="px-2 py-3 border-r border-gray-200">{{ item.currency.code }} {{ (item.total_price ?? item.price).toFixed(2) }}</td>
                                 <td class="py-3 text-center">
                                     <button @click="removeItemFromOrder(item)" class="text-red-600 hover:text-red-800 font-semibold">
@@ -124,7 +165,7 @@ onMounted(() => {
 
                     </div>
                     <div class="grid grid-cols-1 text-sm bg-gray-100 text-black p-1 ">
-                       <input ref="inputRef" v-model="barcode" @input="handleBarcodeChange" type="text" class="col-span-2 p-1 border border-gray-300 rounded" placeholder="Enter amount to pay" />
+                       <input ref="inputRef" v-model="barcode" @input="handleBarcodeChange" type="text" class="col-span-2 p-1 border border-gray-300 rounded text-center" placeholder="Enter bar code" />
                     </div>
 
                     <!-- Keypad -->

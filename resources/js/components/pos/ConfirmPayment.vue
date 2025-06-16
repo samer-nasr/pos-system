@@ -101,6 +101,7 @@ const props = defineProps<{
   rate: {
     currency: string
     counter_currency: string
+    rate:number
   }
 }>()
 
@@ -125,16 +126,30 @@ const formattedCurrencyValue = computed(() => {
 
 const returnCurrency = computed(() => {
   if (inputCurrency.value !== null)
-  return inputCurrency.value  - totalCurrency.value;
+  {
+    return (inputCurrency.value  - totalCurrency.value).toFixed(2);
+  }
+  else if(inputCounterCurrency.value !== null)
+  {
+    return ((inputCounterCurrency.value - totalCounterCurrency.value)/ props.rate.rate).toFixed(2);
+  }
 else
     return 0;
 });
 
 const returnCounterCurrency = computed(() => {
   if (inputCounterCurrency.value !== null)
-  return (inputCounterCurrency.value  - totalCounterCurrency.value).toLocaleString();
-else
+  {
+    return ((inputCounterCurrency.value  - totalCounterCurrency.value)).toLocaleString();
+  }
+  else if(inputCurrency.value !== null)
+  {
+    return ((inputCurrency.value - totalCurrency.value)* props.rate.rate).toLocaleString();
+  }
+  else
+  {
     return 0;
+  }
 });
 
 watch(() => props.show, (newVal) => {

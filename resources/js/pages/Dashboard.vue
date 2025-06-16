@@ -18,7 +18,21 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{
-    categories: { name: string; id: number }[]; 
+    // todo: impelement get items from category without fetch again
+    categories: { 
+        name: string; 
+        id: number;
+        items: { 
+            name: string , 
+            id : number , 
+            price: number, 
+            total_price: number , 
+            quantity: number, 
+            order_quantity: number,
+            currency: {name: string , code: string, id:number},
+            rate: {rate: number , currency: string , counter_currency: string}
+        }[];
+    }[]; 
     selectedCategory: { name: string; id: number };
     barcode_item: typeof selectedItems.value[0] | null;
     items: { 
@@ -81,7 +95,8 @@ const totalOrderPrice = computed(() => {
 
 // total price of the order
 const totalOrderPriceCounterCurrency = computed(() => {
-  return totalOrderPrice.value * (props.items[0]?.rate?.rate? props.items[0].rate.rate :0) ;
+//   return totalOrderPrice.value * (props.items[0]?.rate?.rate? props.items[0].rate.rate :0);
+  return totalOrderPrice.value * (props.categories[0]?.items[0]?.rate?.rate ? props.categories[0]?.items[0]?.rate?.rate : 0);
 });
 
 //load items based on the selected category
@@ -96,10 +111,10 @@ const backToCategories = () => {
 
 // add item to order when the user click on it
 const addItemToOrder = (item: typeof selectedItems.value[0]) => {
-
     // check if the item is out of stock
-    // alert(item.quantity+' '+item.order_quantity);
-    if(item.quantity <= item.order_quantity)
+    const order_quantity = selectedItems.value.find(selectedItem => selectedItem.id === item.id)?.order_quantity ?? 0;
+    // alert(item.quantity+' '+order_quantity);
+    if(item.quantity <= order_quantity)
     {
         showAlertMessage('Item out of stock!' , 'error');
         return;
@@ -196,6 +211,7 @@ const handleBarcodeChange = (barcode: string)=> {
                     @payCart="payCart" 
                     @removeItemFromOrder="removeItemFromOrder"
                     @handleBarcodeChange="handleBarcodeChange"
+                    @addItemToOrder="addItemToOrder"
                 />
                 <!-- Middle Panel (50%) -->
                 <Center 

@@ -18,7 +18,8 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $categories         = Category::where('is_deleted', 0)->get();
+        // TODO: implement to fetch the items with the category and rate
+        $categories         = Category::with('items.rate')->where('is_deleted', 0)->get();
         $items              = [];
         $barcode_item       = NULL;
         $selectedCategory   = null;
