@@ -14,7 +14,7 @@ import { ref, watch } from 'vue';
 const props = defineProps<{
     categories: { name: string; id: number }[];
     brands: { name: string; id: number }[];
-    rates: {id: number, currency: string, counter_currency : string}[];
+    rates: {id: number, rate:number}[];
     currencies: {name: string, code: string, id:number}[];
     item: {
         id: number;
@@ -24,7 +24,7 @@ const props = defineProps<{
         category: { id: number, name:string};
         brand: { id: number, name:string};
         bar_code: string;
-        rate: { id: number, currency:string , counter_currency : string};
+        rate: { id: number, rate:number};
         currency: {id: number, name:string, code:string}
     };
 }>();
@@ -56,8 +56,16 @@ const selectedCategory = ref(
   props.categories.find((cat) => cat.id === form.category) || null
 );
 
+const selectedBrand = ref(
+  props.brands.find((brand) => brand.id === form.brand) || null
+);
+
 watch(selectedCategory, (newVal) => {
   form.category = newVal ? newVal.id : 0;
+});
+
+watch(selectedBrand, (newVal) => {
+  form.brand = newVal ? newVal.id : 0;
 });
 
 const showSuccessAlert = () => {
@@ -124,21 +132,30 @@ const submit = () => {
 
                     <div class="grid gap-2">
                         <Label for="brand">Brand</Label>
-                        <select id="brand" :tabindex="3" autocomplete="brand" v-model="form.brand" class="text-black h-8 rounded-lg px-1">
+                        <!-- <select id="brand" :tabindex="3" autocomplete="brand" v-model="form.brand" class="text-black h-8 rounded-lg px-1">
                             <option value="">Select a brand</option>
                             <option v-for="brand in props.brands" :key="brand.id" :value="brand.id">
                                 {{ brand.name }}
                             </option>
-                        </select>
+                        </select> -->
+
+                        <Multiselect
+                        v-model="selectedBrand"
+                        :options="props.brands"
+                        label="name"
+                        track-by="id"
+                        placeholder="Select one"
+                        :allow-empty="true"
+                        />
                         <InputError :message="form.errors.brand" />
                     </div>
 
                     <div class="grid gap-2">
                         <Label for="rate">Rate</Label>
                         <select id="rate" :tabindex="4" autocomplete="rate" v-model="form.rate" class="text-black h-8 rounded-lg px-1">
-                            <option value="">Select a rate</option>
+                            <option value=""></option>
                             <option v-for="rate in props.rates" :key="rate.id" :value="rate.id">
-                                    {{ rate.currency }} - {{ rate.counter_currency }}
+                                    {{ rate.rate }} 
                             </option>
                         </select>
                         <InputError :message="form.errors.brand" />

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('currency_id');
             $table->unsignedBigInteger('counter_currency_id');
-            $table->decimal('rate', 10, 4);
+            $table->decimal('rate', 10, 2);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

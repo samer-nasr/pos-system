@@ -16,6 +16,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const props = defineProps<{
+    currency: { name:string; code:string; id:number}[];
+    counter_currency: { name:string; code:string; id:number}[];
+}>();
+
 const form = useForm({
     currency: '',
     counter_currency: '',
@@ -77,19 +82,29 @@ const submit = () => {
                 <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="currency">Currency</Label>
-                    <Input id="currency" type="text" required autofocus :tabindex="1" autocomplete="currency" v-model="form.currency" placeholder="Currency" />
+                     <select id="currency" :tabindex="4" autocomplete="currency" v-model="form.currency" class="text-black h-8 rounded-lg px-1">
+                            <option value=""></option>
+                            <option v-for="currency in props.currency" :key="currency.id" :value="currency.id">
+                                    {{ currency.name }} 
+                            </option>
+                    </select>
                     <InputError :message="form.errors.currency" />
                 </div>
 
                  <div class="grid gap-2">
                     <Label for="counter_currency">Counter currency</Label>
-                    <Input id="counter_currency" type="text" required autofocus :tabindex="2" autocomplete="counter_currency" v-model="form.counter_currency" placeholder="Counter currency" />
+                    <select id="counter_currency" :tabindex="4" autocomplete="counter_currency" v-model="form.counter_currency" class="text-black h-8 rounded-lg px-1">
+                            <option value=""></option>
+                            <option v-for="counter_currency in props.counter_currency" :key="counter_currency.id" :value="counter_currency.id">
+                                    {{ counter_currency.name }} 
+                            </option>
+                    </select>
                     <InputError :message="form.errors.counter_currency" />
                 </div>
 
                  <div class="grid gap-2">
                     <Label for="rate">Rate</Label>
-                    <Input id="rate" type="number" required autofocus :tabindex="1" autocomplete="rate" v-model="form.rate" placeholder="Rate" />
+                    <Input id="rate" type="number" step="0.01" required autofocus :tabindex="1" autocomplete="rate" v-model="form.rate" placeholder="Rate" />
                     <InputError :message="form.errors.rate" />
                 </div>
 

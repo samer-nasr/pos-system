@@ -10,7 +10,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{
-    rates: { currency: string; id: number , counter_currency: string , rate: number}[];
+    rates: { 
+        id: number , 
+        rate: number,
+        currency: { name:string, code:string, id:number},
+        counter_currency: { name:string, code:string, id:number}
+    }[];
 }>();
 
 const goToCreateRate = () => {
@@ -73,8 +78,8 @@ const editRate = (rateId: number): void => {
                             :key="rate.id"
                             class="border border-gray-200 hover:bg-gray-50 transition odd:bg-white even:bg-gray-200"
                         >
-                            <td class="px-4 py-2 text-gray-700">{{ rate.currency }}</td>
-                            <td class="px-4 py-2 text-gray-700">{{ rate.counter_currency }}</td>
+                            <td class="px-4 py-2 text-gray-700">{{ rate.currency.name }}</td>
+                            <td class="px-4 py-2 text-gray-700">{{ rate.counter_currency.name }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ rate.rate }}</td>
                             <td class="px-4 py-2 text-center space-x-2">
                                 <Button variant="destructive" size="sm" @click="deleteRate(rate.id)">

@@ -55,11 +55,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Cigarettes',
         ]);
 
-        rate::create([
-            'currency' => 'USD',
-            'counter_currency'=> 'LBP',
-            'rate'=> 89500
-        ]);
+      
 
         Items::factory()->create([
             'name' => 'beer 150 ml',
@@ -141,6 +137,17 @@ class DatabaseSeeder extends Seeder
         Currency::create([
             'name' => 'USD',
             'code'=> '$'
+        ]);
+
+        Currency::create([
+            'name' => 'LBP',
+            'code'=> 'L.L'
+        ]);
+
+        rate::create([
+            'currency_id' => 1,
+            'counter_currency_id'=> 2,
+            'rate'=> 89500
         ]);
     }
 }

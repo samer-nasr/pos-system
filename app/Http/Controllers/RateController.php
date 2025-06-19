@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\rate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,7 +11,9 @@ class RateController extends Controller
 {
     public function index()
     {
-        $rates = rate::where('is_deleted', 0)->get();
+        $rates = rate::with('currency' , 'counter_currency')
+                        ->where('is_deleted', 0)
+                        ->get();
         return Inertia::render('rate/List' , [
             'rates' => $rates
         ]);
@@ -18,20 +21,28 @@ class RateController extends Controller
 
     public function create(Request $request)
     {
-        return Inertia::render('rate/Create');
+        $currency = Currency::where('is_deleted', 0)
+                            ->get();
+
+        $counter_currency = Currency::where('is_deleted', 0)
+                            ->get();
+        return Inertia::render('rate/Create', [
+            'currency'=> $currency,
+            'counter_currency'=> $counter_currency
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'currency' => 'required|string|max:10',
-            'counter_currency' => 'required|string|max:10',
+            'currency' => 'required|numeric',
+            'counter_currency' => 'required|numeric',
             'rate' => 'required|numeric',
         ]);
 
         rate::create([
-            'currency' => $request->currency,
-            'counter_currency' => $request->counter_currency,
+            'currency_id' => $request->currency,
+            'counter_currency_id' => $request->counter_currency,
             'rate' => $request->rate,
             'is_deleted'=> 0
         ]);
@@ -41,23 +52,31 @@ class RateController extends Controller
 
     public function edit($id)
     {
+        $rate = rate::findOrFail($id);
+        $currency = Currency::where('is_deleted', 0)
+                            ->get();
+
+        $counter_currency = Currency::where('is_deleted', 0)
+                            ->get();
         return Inertia::render('rate/Edit', [
-            'rate' => rate::findOrFail($id)
+            'rate' => $rate,
+            'currency'=> $currency,
+            'counter_currency'=> $counter_currency
         ]);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'currency' => 'required|string|max:10',
-            'counter_currency' => 'required|string|max:10',
+            'currency' => 'required|numeric',
+            'counter_currency' => 'required|numeric',
             'rate' => 'required|numeric',
         ]);
 
         $rate = rate::findOrFail($id);
         $rate->update([
-            'currency' => $request->currency,
-            'counter_currency' => $request->counter_currency,
+            'currency_id' => $request->currency,
+            'counter_currency_id' => $request->counter_currency,
             'rate' => $request->rate,
         ]);
 
