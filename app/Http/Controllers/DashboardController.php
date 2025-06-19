@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
+use App\Models\Invoice;
 use App\Models\Items;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,7 @@ class DashboardController extends Controller
             $cart->user_id      = Auth::user()->id;
             $cart->rate_id      = $rate_id;
             $cart->item_quantity= $number_of_items;
+            $cart->user_id      = Auth::user()->id;
 
             $cart->save();
 
@@ -87,6 +89,16 @@ class DashboardController extends Controller
 
                 $cart_item->save();
             }
+            // create invoice
+            $invoice = new Invoice();
+            $invoice->cart_id       = $cart->id;
+            $invoice->user_id       = Auth::user()->id;
+            $invoice->rate_id       = $cart->rate_id;
+            $invoice->invoice_number= 'INV-' . time() . '-' . $cart->id;
+            $invoice->amount        = $cart->total_price;
+
+            $invoice->save();
+
             DB::commit();
         }
         catch(\Exception $e)

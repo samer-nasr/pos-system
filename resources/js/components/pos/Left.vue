@@ -100,7 +100,13 @@ const clearInput = () => {
 
 const updateTime = () => {
   const now = new Date()
-  currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+//   currentTime.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  currentTime.value = [
+  now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  now.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: 'numeric' })
+].join('\t\t\t\t\t\t\t\t');
+
+                    //   now.toLocaleDateString([] , { year: 'numeric', month: '2-digit', day: 'numeric' })
 }
 const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -117,7 +123,7 @@ onMounted(() => {
 <template>
     <div class="w-1/4 h-[90vh] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white p-1 flex flex-col">
                     <!-- Time -->
-                    <div class="bg-gray-100 text-black text-lg px-2">{{ currentTime }}</div>
+                    <div class="bg-gray-100 text-black text-lg px-2" style="white-space: pre">{{ currentTime }}</div>
 
                     <!-- Order List -->
                     <div class="flex-1 bg-gray-50 text-black mb-2 rounded  overflow-auto">
@@ -170,19 +176,19 @@ onMounted(() => {
 
                     <!-- Keypad -->
                     <div class="grid grid-cols-3 gap-1 mb-2">
-                    <button class="bg-white text-black py-2" @click="appendToInput('7')">7</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('8')">8</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('9')">9</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('4')">4</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('5')">5</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('6')">6</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('1')">1</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('2')">2</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('3')">3</button>
-                    <button class="bg-black text-white py-2" @click="clearInput">CLEAR</button>
-                    <button class="bg-white text-black py-2" @click="appendToInput('0')">0</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('7')">7</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('8')">8</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('9')">9</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('4')">4</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('5')">5</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('6')">6</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('1')">1</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('2')">2</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('3')">3</button>
+                    <button class="bg-black text-white py-2 border rounded" @click="clearInput">CLEAR</button>
+                    <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('0')">0</button>
                     <!-- <button class="bg-black text-white py-2" @click="payCart">Pay</button> -->
-                    <button class="bg-black text-white py-2" @click="openPaymentModal">Pay</button>
+                    <button class="bg-black text-white py-2 border rounded" @click="openPaymentModal">Pay</button>
                     </div>
                 </div>
                 <ConfirmPayment

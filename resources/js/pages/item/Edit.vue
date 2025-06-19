@@ -7,6 +7,9 @@ import { LoaderCircle } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/InputError.vue';
 import Swal from 'sweetalert2';
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{
     categories: { name: string; id: number }[];
@@ -30,6 +33,13 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Items', href: '/items' },
 ];
 
+
+
+// const categories = props.categories.map(category => (
+//     category.name
+//     // id: category.id
+// ));
+
 // Initialize form with empty values
 const form = useForm({
     name: props.item.name,
@@ -40,6 +50,14 @@ const form = useForm({
     bar_code: props.item.bar_code,
     rate: props.item.rate.id,
     currency: props.item.currency.id
+});
+
+const selectedCategory = ref(
+  props.categories.find((cat) => cat.id === form.category) || null
+);
+
+watch(selectedCategory, (newVal) => {
+  form.category = newVal ? newVal.id : 0;
 });
 
 const showSuccessAlert = () => {
@@ -76,7 +94,7 @@ const submit = () => {
                         <InputError :message="form.errors.name" />
                     </div>
 
-                    <div class="grid gap-2">
+                    <!-- <div class="grid gap-2">
                         <Label for="category">Category</Label>
                         <select id="category" :tabindex="2" autocomplete="category" v-model="form.category"
                             class="text-black h-8 rounded-lg px-1">
@@ -86,7 +104,23 @@ const submit = () => {
                             </option>
                         </select>
                         <InputError :message="form.errors.category" />
+                    </div> -->
+
+                    <div class="grid gap-2">
+                        <Label for="category">Category</Label>
+
+                       <Multiselect
+                        v-model="selectedCategory"
+                        :options="props.categories"
+                        label="name"
+                        track-by="id"
+                        placeholder="Select one"
+                        :allow-empty="true"
+                        />
+
+                        <InputError :message="form.errors.category" />
                     </div>
+
 
                     <div class="grid gap-2">
                         <Label for="brand">Brand</Label>

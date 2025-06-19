@@ -18,10 +18,25 @@ class ItemsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Items::with('brand', 'category')->where('is_deleted' , DB::raw(0))->get();
-        return Inertia::render('item/List', ['items' => $items]);
+        $search = $request->query('search');
+
+        $items = Items::with(['brand', 'category'])
+            ->when($search, function ($query, $search) {
+                $query->where('bar_code', 'like', $search);
+                $query->orWhere('name', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(10)
+            ->appends(['search' => $search]); // Keep search in pagination links
+
+        return Inertia::render('item/List', [
+            'items' => $items,
+            'filters' => [
+                'search' => $search,
+            ]
+        ]);
     }
 
     /**
@@ -83,7 +98,7 @@ class ItemsController extends Controller
                 'currency_id' => $request->currency
             ]);
             DB::commit();
-            return $this->index();
+            return $this->index($request);
         }
         catch(\Exception $e)
         {
@@ -133,6 +148,7 @@ class ItemsController extends Controller
      */
     public function update(Request $request, Items $item)
     {
+        // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:50',
             'price'=> 'required|numeric',
@@ -157,7 +173,7 @@ class ItemsController extends Controller
             $item->currency_id = $request->currency;
             $item->save();
             DB::commit();
-            return $this->index();
+            return $this->index($request);
         }
         catch(\Exception $e)
         {

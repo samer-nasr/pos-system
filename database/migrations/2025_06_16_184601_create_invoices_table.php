@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rates', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('currency_id');
-            $table->unsignedBigInteger('counter_currency_id');
-            $table->decimal('rate', 10, 4);
+            $table->string('invoice_number')->unique();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('rate_id');
+            $table->unsignedBigInteger('cart_id');
+            $table->decimal('amount', 10, 2);
+            $table->enum('status', ['paid', 'pending'])->default('paid');  
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rates');
+        Schema::dropIfExists('invoices');
     }
 };
