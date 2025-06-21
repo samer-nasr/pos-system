@@ -26,25 +26,25 @@
         <label class="block mb-2 text-gray-700 mt-2 text-center">Payed Price</label>
         <div class="flex space-x-2 my-2">
             <div class="">
-                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.currency }}</label>
+                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.currency.name }}</label>
                 <input
                 :value="formattedCurrencyValue"
                 @input="formatCurrency"
                 type="text"
                 step="0.01"
                 class=" border rounded p-2 text-black text-center"
-                :placeholder="rate.currency"
+                :placeholder="rate.currency.name"
                 />
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.counter_currency }}</label>
+                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.counter_currency.name }}</label>
                 <input
                 @input="formatCounterCurrency"
                 :value="formattedCounterCurrencyValue"
                 type="text"
                 class="border rounded p-2 text-black text-center"
-                :placeholder="rate.counter_currency"
+                :placeholder="rate.counter_currency.name"
                 />
             </div>
         </div>
@@ -52,24 +52,24 @@
         <label class="block mb-2 text-gray-700 mt-2 text-center">Return</label>
         <div class="flex space-x-2 my-2">
             <div class="">
-                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.currency }}</label>
+                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.currency.name }}</label>
                 <input
                 :value="returnCurrency"
                 type="text"
                 readonly
                 class=" border rounded p-2 text-black text-center"
-                :placeholder="rate.currency"
+                :placeholder="rate.currency.name"
                 />
             </div>
 
             <div>
-                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.counter_currency }}</label>
+                <label class="block mb-2 text-gray-700 mt-1 text-center">{{ rate.counter_currency.name }}</label>
                 <input
                 :value="returnCounterCurrency"
                 type="text"
                 readonly
                 class="border rounded p-2 text-black text-center"
-                :placeholder="rate.counter_currency"
+                :placeholder="rate.counter_currency.name"
                 />
             </div>
         </div>
@@ -99,10 +99,10 @@ const props = defineProps<{
   totalCurrency: number
   totalCounterCurrency: number
   rate: {
-    currency: string
-    counter_currency: string
-    rate:number
-  }
+          rate: number , 
+          currency: {name: string, code: string} , 
+          counter_currency:{name: string, code: string}
+      }
 }>()
 
 const emit = defineEmits(['update:show', 'confirmed']);

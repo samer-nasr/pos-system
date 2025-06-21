@@ -12,7 +12,11 @@ const props = defineProps<{
                     quantity: number, 
                     order_quantity: number,
                     currency: {name: string , code: string, id:number},
-                    rate: {rate: number , currency: string , counter_currency: string}
+                    rate: {
+                        rate: number , 
+                        currency: {name: string, code: string} , 
+                        counter_currency:{name: string, code: string}
+                    }
                     }[];
     totalOrderPrice: number;
     totalOrderPriceCounterCurrency: number;
@@ -30,7 +34,7 @@ const currencyTotalOrderPrice = computed(()=> {
 
 const counterCurrencyTotalOrderPrice = computed(()=> {
     return props.selectedItems[0]?.rate?.counter_currency
-    ? props.selectedItems[0].rate.counter_currency + ' ' + props.totalOrderPriceCounterCurrency.toLocaleString()
+    ? props.selectedItems[0].rate.counter_currency.name + ' ' + props.totalOrderPriceCounterCurrency.toLocaleString()
     : props.totalOrderPriceCounterCurrency.toLocaleString();
 })
 
@@ -197,7 +201,7 @@ onMounted(() => {
                         :total-counter-currency="props.totalOrderPriceCounterCurrency"
                         :currencyTotalOrderPrice="currencyTotalOrderPrice"
                         :counterCurrencyTotalOrderPrice="counterCurrencyTotalOrderPrice"
-                        :rate="selectedItems[0]?.rate? selectedItems[0].rate : {rate: 1, currency: 'USD', counter_currency: 'LBP'}"
+                        :rate="selectedItems[0]?.rate? selectedItems[0].rate : {rate: 1, currency:{name:'USD' , code:'$'}, counter_currency:{name:'LBP', code:'L.L'}}"
                         @update:show="showModal = $event"
                         @confirmed="handleConfirmed"
                   />

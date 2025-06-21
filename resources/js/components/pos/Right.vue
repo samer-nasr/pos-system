@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { defineEmits,defineProps } from 'vue'
+import { defineEmits,defineProps } from 'vue';
+import EOTD from '@/components/pos/EOTD.vue';
+
 
 const props = defineProps<{
     history:
@@ -18,17 +20,36 @@ const props = defineProps<{
                     quantity: number
                 }
             }[];
-        }[]
+        }[],
+    total_sales : {
+        total_sales_currency : string,
+        total_sales_cCurrency : string,
+        total_orders : number,
+        total_items : number
+    }
 }>();
 
-const emit = defineEmits(['loadItems', 'addItemToOrder','backToCategories']);
+const emit = defineEmits(['getTotalSales']);
+
+const showModal = ref(false);
+const openModal = () => {
+    emit('getTotalSales')
+  showModal.value = true
+}
 
 </script>
 
 <template>
 
-    <div class="w-1/4 h-[90vh] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white p-2 flex flex-col gap-2">       
-        <h2 class="text-center text-black">History</h2>          
+    <div class="w-1/4 h-[90vh] rounded-xl border border-sidebar-border/70 dark:border-sidebar-border bg-white p-2 flex flex-col gap-2"> 
+        <div class="flex justify-between text-black">
+            <h2 class="text-center ">History</h2>
+            <button 
+                class="border px-1 hover:bg-black hover:text-white"
+                @click="openModal">
+                End Of the Day
+            </button>          
+        </div>      
         <div class="flex-1 bg-gray-50 text-black mb-2 rounded p-2 overflow-auto">
             <table class="w-full text-sm text-left text-gray-700 border-collapse border border-gray-300 rounded-lg overflow-hidden">
                 <thead class="bg-gray-100 border-b border-gray-300">
@@ -50,5 +71,10 @@ const emit = defineEmits(['loadItems', 'addItemToOrder','backToCategories']);
             </table>
         </div>
     </div>
+    <EOTD
+        :show="showModal"
+        :total_sales="props.total_sales"
+        @update:show="showModal = $event"
+    />
    
 </template>

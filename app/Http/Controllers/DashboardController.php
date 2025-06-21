@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Invoice;
 use App\Models\Items;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,24 +33,68 @@ class DashboardController extends Controller
         // dd($history->toArray());
 
         if ($request->has('category_id') && $request->category_id) {
-            $selectedCategory = Category::with('items', 'items.currency' ,'items.rate')
+            $selectedCategory = Category::with('items', 'items.currency' ,'items.rate', 'items.rate.currency' , 'items.rate.counter_currency')
                                             ->find($request->category_id);
             $items = $selectedCategory ? $selectedCategory->items : []; 
+        // dd($items->toArray() );
         }
         if( $request->has('barcode') && $request->barcode)
         {
-            $barcode_item = Items::with('category', 'brand', 'currency', 'rate')
+            $barcode_item = Items::with('category', 'brand', 'currency', 'rate', 'rate.currency', 'rate.counter_currency')
                                     ->where('bar_code', $request->barcode)
                                     ->first() ?? NULL;
         }
+        if($request->has('EOTD') && $request->EOTD)
+        {
+            $invoices = Invoice::with('cart' , 'cart.items' ,'cart.items.item.rate.currency', 'cart.items.item.rate.counter_currency')
+                                    ->whereDate('created_at', Carbon::today())
+                                    ->where('is_deleted' , 0)
+                                    ->where('user_id' , Auth::user()->id)
+                                    ->get();
+            if($invoices->count() != 0)
+            {
 
-        // dd($items->toArray() , $selectedCategory->toArray());
+                $invoice = $invoices->first();
+                $cart = $invoice?->cart;
+                $item = $cart?->items->first()?->item;
+                $rate = $item?->rate;
+                $currency = $rate->currency->name;
+                $counter_currency = $rate->counter_currency->name;
+                $rate = $rate->rate;
+                $total = number_format($invoices->sum('amount'), 2);
+                $total_sales_currency       = $currency.' '.$total;
+                $total_sales_cCurrency      = $counter_currency.' '.number_format($total * $rate);
+                $total_orders               = $invoices->count();
+                $total_items                = $invoices->sum(function ($invoice) {
+                    return $invoice->cart?->items->sum('quantity') ?? 0;
+                });
+
+                $total_sales = [
+                    'total_sales_currency' => $total_sales_currency,
+                    'total_sales_cCurrency'=> $total_sales_cCurrency,
+                    'total_orders'          => $total_orders,
+                    'total_items'           => $total_items
+                ];
+            }
+            else
+            {
+                $total_sales = [
+                    'total_sales_currency' => '0.00',
+                    'total_sales_cCurrency'=> '0.00',
+                    'total_orders'          => 0,
+                    'total_items'           => 0
+                ];
+            }
+
+        }
+
         return Inertia::render('Dashboard', [
             'categories'        => $categories , 
             'items'             => $items,
             'selectedCategory'  => $selectedCategory,
             'history'           => $history,
-            'barcode_item'     => $barcode_item
+            'barcode_item'      => $barcode_item,
+            'total_sales'       => $total_sales ?? 0
         ]);
     }
 

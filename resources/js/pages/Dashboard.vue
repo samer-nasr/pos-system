@@ -30,7 +30,11 @@ const props = defineProps<{
             quantity: number, 
             order_quantity: number,
             currency: {name: string , code: string, id:number},
-            rate: {rate: number , currency: string , counter_currency: string}
+            rate: {
+                rate: number , 
+                currency: {name: string, code: string} , 
+                counter_currency:{name: string, code: string}
+            }
         }[];
     }[]; 
     selectedCategory: { name: string; id: number };
@@ -43,7 +47,11 @@ const props = defineProps<{
         quantity: number, 
         order_quantity: number,
         currency: {name: string , code: string, id:number},
-        rate: {rate: number , currency: string , counter_currency: string}
+        rate: {
+                    rate: number , 
+                    currency: {name: string, code: string} , 
+                    counter_currency:{name: string, code: string}
+        }
     }[];
     history:
         {
@@ -60,7 +68,13 @@ const props = defineProps<{
                     quantity: number
                 }
             }[];
-        }[]
+        }[],
+    total_sales : {
+        total_sales_currency : string,
+        total_sales_cCurrency : string,
+        total_orders : number,
+        total_items : number
+    }
 }>();
 
 const selectedItems = ref<
@@ -72,7 +86,11 @@ const selectedItems = ref<
                             quantity: number, 
                             order_quantity: number,
                             currency: {name: string , code: string, id:number},
-                            rate: {rate: number , currency: string , counter_currency: string}
+                             rate: {
+                                        rate: number , 
+                                        currency: {name: string, code: string} , 
+                                        counter_currency:{name: string, code: string}
+                            }
                         }[]>([]);
 
 // merge items with selected items
@@ -194,6 +212,14 @@ const handleBarcodeChange = (barcode: string)=> {
     });
 }
 
+const getTotalSales = () => {
+    router.get('dashboard', {EOTD: true}, { preserveScroll: true, preserveState:true,
+        onError: (errors) => {
+            showAlertMessage('Error fetching total sales: ' + errors, 'error');
+        }
+    })
+}
+
 </script>
 
 <template>
@@ -224,7 +250,7 @@ const handleBarcodeChange = (barcode: string)=> {
                    />
                
                 <!-- Right Panel (25%) -->
-                <Right :history="props.history" />
+                <Right :history="props.history" :total_sales="props.total_sales" @get-total-sales="getTotalSales" />
             </div>
         </div> 
     </AppLayout>
