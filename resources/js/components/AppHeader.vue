@@ -18,7 +18,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Currency, Folder, LayoutGrid, ListChecks, Menu, Search, ShoppingCart } from 'lucide-vue-next';
+import { BaggageClaim, BookOpen, Currency, Folder, LayoutGrid, ListChecks, Menu, Search, ShoppingCart } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -73,6 +73,11 @@ const mainNavItems: NavItem[] = [
         title: 'Currencies',
         href: '/currencies',
         icon: Currency,
+    },  
+    {
+        title: 'Accounts',
+        href: '/accounts',
+        icon: BaggageClaim,
     },  
 ];
 

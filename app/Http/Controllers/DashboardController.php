@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\Invoice;
 use App\Models\Items;
+use App\Models\Operation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -144,6 +145,16 @@ class DashboardController extends Controller
 
             $invoice->save();
 
+            // create operation
+            $operation = new Operation();
+            $operation->user_id = Auth::user()->id;
+            $operation->invoice_id = $invoice->id;
+            $operation->type = 'C';
+            $operation->amount = $invoice->amount;
+            $operation->origin = 'Sale';
+
+            $operation->save();
+
             DB::commit();
         }
         catch(\Exception $e)
@@ -152,6 +163,16 @@ class DashboardController extends Controller
             dd($e);
         }
 
+    }
+
+    public function eotd(Request $request)
+    {
+        $operations = Operation::where('user_id' , Auth::user()->id)
+                                ->whereDate('created_at' , Carbon::today())
+                                ->where('type' , 'C')
+                                ->where('origin' , 'Sale')
+                                ->get();
+        dd($operations->toArray());
     }
 
     /**

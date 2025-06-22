@@ -57,7 +57,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref, watch,computed } from 'vue'
+import { defineEmits, ref, watch,computed } from 'vue';
+import { router } from '@inertiajs/vue3';
+
 
 const props = defineProps<{
   show: boolean,
@@ -76,7 +78,7 @@ const emit = defineEmits(['update:show', 'getTotalSales']);
 const cancel = () => emit('update:show', false);
 
 const confirm = () => {
-    alert(props.total_sales);
+    router.post('dashboard/eotd' , {} , { preserveScroll: true, preserveState: true });
     // emit('update:show', false);
 }
 
