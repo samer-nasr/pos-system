@@ -10,7 +10,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps<{
-    accounts: { name: string; id: number , code: string , type: string}[];
+    accounts: { name: string; id: number , code: string , type: string , description: string}[];
 }>();
 
 const goToCreateAccount = () => {
@@ -63,6 +63,7 @@ const editAccount = (accountId: number): void => {
                         <tr class="bg-gray-300 text-gray-700 uppercase text-sm font-semibold">
                             <th class="border border-gray-200 px-4 py-2 text-left">Name</th>
                             <th class="border border-gray-200 px-4 py-2 text-left">Code</th>
+                            <th class="border border-gray-200 px-4 py-2 text-left">Description</th>
                             <th class="border border-gray-200 px-4 py-2 text-center">Action</th>
                         </tr>
                     </thead>
@@ -74,6 +75,7 @@ const editAccount = (accountId: number): void => {
                         >
                             <td class="px-4 py-2 text-gray-700">{{ account.name }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ account.code }}</td>
+                            <td class="px-4 py-2 text-gray-700">{{ account.description }}</td>
                             <td class="px-4 py-2 text-center space-x-2">
                                 <Button variant="destructive" size="sm" @click="deleteAccount(account.id)">
                                     Delete

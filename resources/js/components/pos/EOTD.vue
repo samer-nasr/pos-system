@@ -79,7 +79,7 @@ const cancel = () => emit('update:show', false);
 
 const confirm = () => {
     router.post('dashboard/eotd' , {} , { preserveScroll: true, preserveState: true });
-    // emit('update:show', false);
+    emit('update:show', false);
 }
 
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Category;
@@ -172,7 +173,17 @@ class DashboardController extends Controller
                                 ->where('type' , 'C')
                                 ->where('origin' , 'Sale')
                                 ->get();
-        dd($operations->toArray());
+
+        // add the operation amounts to account 4000
+        $operation = new Operation();
+        $operation->amount = $operations->sum('amount');
+        $operation->origin = 'account';
+        $operation->origin_id = Account::where('code' , 'like' , '4000')->first()->id;
+        $operation->type = 'C';
+        $operation->user_id = Auth::user()->id;
+
+        $operation->save();
+        // dd($operation->toArray());
     }
 
     /**

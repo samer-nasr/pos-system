@@ -17,6 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
     account: { name: string; id: number , code: string};
+    amount : number
 }>();
 
 const form = useForm({
@@ -61,6 +62,12 @@ const submit = () => {
                     <Label for="code">Code</Label>
                     <Input id="code" type="text" required autofocus :tabindex="1" autocomplete="code" v-model="form.code" placeholder="Code" />
                     <InputError :message="form.errors.code" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="Amount">Amount</Label>
+                    <Input id="Amount" v-model:model-value="props.amount" type="text" required autofocus :tabindex="1" autocomplete="Amount" readonly placeholder="Amount" />
+                    <!-- <InputError :message="form.errors.code" /> -->
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">

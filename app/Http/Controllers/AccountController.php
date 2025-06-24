@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\Operation;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PhpOffice\PhpSpreadsheet\Calculation\Engine\Operands\Operand;
 
 class AccountController extends Controller
 {
@@ -40,9 +42,15 @@ class AccountController extends Controller
     public function edit(Request $request, $id)
     {
         $account = Account::findOrFail($id);
+        $amount  = Operation::where('type' , 'like', 'C')
+                                // ->where('is_deleted' , 0)
+                                ->where('origin' , 'like' , 'account')
+                                ->where('origin_id' , $id)
+                                ->sum('amount'); 
 
         return Inertia::render('accounts/Edit' , [
-            'account' => $account
+            'account' => $account,
+            'amount' => $amount
         ]);
     }
 
