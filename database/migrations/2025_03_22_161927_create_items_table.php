@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
+            $table->float('cost');
             $table->integer('quantity');
             $table->unsignedInteger('category_id');
             $table->unsignedInteger('brand_id');
             $table->unsignedInteger('rate_id');
             $table->unsignedBigInteger('currency_id');
+            $table->unsignedBigInteger('counter_currency_id');
             $table->string('bar_code');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();

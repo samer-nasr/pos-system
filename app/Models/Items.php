@@ -40,4 +40,9 @@ class Items extends Model
     {
         return $this->belongsTo(Currency::class, 'currency_id');
     }
+
+    public function counter_currency()
+    {
+        return $this->belongsTo(Currency::class, 'counter_currency_id');
+    }
 }

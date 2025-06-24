@@ -70,7 +70,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 1,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 1,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 100
@@ -81,7 +83,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 1,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 1,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 104
@@ -92,7 +96,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 1,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 1,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 105
@@ -103,7 +109,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 1,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 1,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 106
@@ -114,7 +122,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 2,
             'brand_id' => 2,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 2,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 5,
             'bar_code' => 101
@@ -125,7 +135,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 1,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 3,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 102
@@ -136,7 +148,9 @@ class DatabaseSeeder extends Seeder
             'category_id' => 3,
             'brand_id' => 1,
             'currency_id'=> 1,
+            'counter_currency_id'=> 2,
             'price'=> 4,
+            'cost'=> 0.8,
             'rate_id'=> 1,
             'quantity'=> 10,
             'bar_code' => 103

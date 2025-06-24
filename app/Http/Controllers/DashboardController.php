@@ -177,10 +177,12 @@ class DashboardController extends Controller
         // add the operation amounts to account 4000
         $operation = new Operation();
         $operation->amount = $operations->sum('amount');
-        $operation->origin = 'account';
-        $operation->origin_id = Account::where('code' , 'like' , '4000')->first()->id;
+        // $operation->origin = 'account';
+        // $operation->origin_id = Account::where('code' , 'like' , '4000')->first()->id;
+        $operation->account_ref = '4000';
         $operation->type = 'C';
         $operation->user_id = Auth::user()->id;
+        // dd($operation);
 
         $operation->save();
         // dd($operation->toArray());

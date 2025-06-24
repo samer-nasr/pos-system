@@ -16,16 +16,19 @@ const props = defineProps<{
     brands: { name: string; id: number }[];
     rates: {id: number, rate:number}[];
     currencies: {name: string, code: string, id:number}[];
+    counter_currencies: {name: string, code: string, id:number}[];
     item: {
         id: number;
         name: string;
         price: number;
+        cost: number;
         quantity: number;
         category: { id: number, name:string};
         brand: { id: number, name:string};
         bar_code: string;
         rate: { id: number, rate:number};
-        currency: {id: number, name:string, code:string}
+        currency: {id: number, name:string, code:string};
+        counter_currency: {id: number, name:string, code:string};
     };
 }>();
 
@@ -44,12 +47,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 const form = useForm({
     name: props.item.name,
     price: props.item.price,
+    cost: props.item.cost,
     quantity: props.item.quantity,
     category: props.item.category.id,
     brand: props.item.brand.id,
     bar_code: props.item.bar_code,
     rate: props.item.rate.id,
-    currency: props.item.currency.id
+    currency: props.item.currency.id,
+    counter_currency: props.item.counter_currency.id,
 });
 
 const selectedCategory = ref(
@@ -161,7 +166,7 @@ const submit = () => {
                         <InputError :message="form.errors.brand" />
                     </div>
 
-                     <div class="grid gap-2">
+                    <div class="grid gap-2">
                         <Label for="currency">Currency</Label>
                         <select id="currency" :tabindex="5" autocomplete="currency" v-model="form.currency" class="text-black h-8 rounded-lg px-1">
                             <option value="">Select a currency</option>
@@ -173,10 +178,28 @@ const submit = () => {
                     </div>
 
                     <div class="grid gap-2">
+                        <Label for="counter_currency">Counter currency</Label>
+                        <select id="counter_currency" :tabindex="5" autocomplete="counter_currency" v-model="form.counter_currency" class="text-black h-8 rounded-lg px-1">
+                            <option value="">Select a counter currency</option>
+                            <option v-for="counter_currency in props.counter_currencies" :key="counter_currency.id" :value="counter_currency.id">
+                                    {{ counter_currency.code }} - {{ counter_currency.name }}
+                            </option>
+                        </select>
+                        <InputError :message="form.errors.counter_currency" />
+                    </div>
+
+                    <div class="grid gap-2">
                         <Label for="price">Price</Label>
                         <Input id="price" type="number" step="0.01" required :tabindex="6" autocomplete="price" v-model="form.price"
                             placeholder="$100" />
                         <InputError :message="form.errors.price" />
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="cost">Cost</Label>
+                        <Input id="cost" type="number" step="0.01" required :tabindex="6" autocomplete="cost" v-model="form.cost"
+                            placeholder="$100" />
+                        <InputError :message="form.errors.cost" />
                     </div>
 
                     <div class="grid gap-2">

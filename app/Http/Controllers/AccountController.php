@@ -44,8 +44,8 @@ class AccountController extends Controller
         $account = Account::findOrFail($id);
         $amount  = Operation::where('type' , 'like', 'C')
                                 // ->where('is_deleted' , 0)
-                                ->where('origin' , 'like' , 'account')
-                                ->where('origin_id' , $id)
+                                ->where('account_ref' , 'like' , $account->code)
+                                // ->where('origin_id' , $id)
                                 ->sum('amount'); 
 
         return Inertia::render('accounts/Edit' , [

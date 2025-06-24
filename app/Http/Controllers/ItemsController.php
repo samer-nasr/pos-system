@@ -52,11 +52,13 @@ class ItemsController extends Controller
                                 ->get();
         $rates = rate::where('is_deleted', 0)->get();
         $currencies = Currency::where('is_deleted', 0)->get();
+        $counter_currencies = $currencies;
         return Inertia::render('item/Create' , [
             'categories' => $categories , 
             'brands' => $brands,
             'rates' => $rates,
-            'currencies'=> $currencies
+            'currencies'=> $currencies,
+            'counter_currencies'=>$counter_currencies
         ]);
     }
 
@@ -75,12 +77,14 @@ class ItemsController extends Controller
         $request->validate([
             'name' => 'required|string|max:50',
             'price'=> 'required|numeric',
+            'cost'=> 'required|numeric',
             'quantity'=> 'required|numeric',
             'category'=> 'required|exists:categories,id|numeric',
-            'brand'=> 'required|exists:brands,id|numeric',
+            // 'brand'=> 'required|exists:brands,id|numeric',
             'bar_code' => 'required|string|min:3|unique:items,bar_code',
             'rate' => 'nullable|exists:rates,id|numeric',
             'currency' => 'required|exists:currencies,id|numeric',
+            'counter_currency' => 'required|exists:currencies,id|numeric',
         ]);
 
         DB::beginTransaction();
@@ -90,12 +94,14 @@ class ItemsController extends Controller
             Items::create([
                 'name' => $request->name,
                 'price'=> $request->price,
+                'cost'=> $request->cost,
                 'quantity'=> $request->quantity,
                 'category_id'=>$request->category,
                 'brand_id'=>$request->brand,
                 'bar_code'=> $request->bar_code,
                 'rate_id' => $request->rate,
-                'currency_id' => $request->currency
+                'currency_id' => $request->currency,
+                'counter_currency_id'=> $request->counter_currency
             ]);
             DB::commit();
             return $this->index($request);
@@ -120,8 +126,7 @@ class ItemsController extends Controller
      */
     public function edit($id)
     {
-        $item = Items::with('brand', 'category', 'rate', 'currency')->find($id);
-
+        $item = Items::with('brand', 'category', 'rate', 'currency', 'counter_currency')->find($id);
 
         $categories = Category::where('is_deleted' , DB::raw(0))
                                 ->where('is_deleted' , DB::raw(0))
@@ -131,7 +136,7 @@ class ItemsController extends Controller
                                 ->get();
         $rates = rate::where('is_deleted', 0)->get();
         $currencies = Currency::where('is_deleted', 0)->get();
-
+        $counter_currencies = $currencies;
         
 
         return Inertia::render('item/Edit', [
@@ -139,7 +144,8 @@ class ItemsController extends Controller
             'categories' => $categories , 
             'brands' => $brands,
             'rates'=> $rates,
-            'currencies'=> $currencies
+            'currencies'=> $currencies,
+            'counter_currencies'=> $counter_currencies
         ]);
     }
 
@@ -152,11 +158,13 @@ class ItemsController extends Controller
         $request->validate([
             'name' => 'required|string|max:50',
             'price'=> 'required|numeric',
+            'cost'=> 'required|numeric',
             'quantity'=> 'required|numeric',
             'category'=> 'required|exists:categories,id|numeric',
             'brand'=> 'required|exists:brands,id|numeric',
             'rate'=> 'required|exists:rates,id|numeric',
             'currency'=> 'required|exists:currencies,id|numeric',
+            'counter_currency'=> 'required|exists:currencies,id|numeric',
         ]);
 
         DB::beginTransaction();
@@ -165,12 +173,14 @@ class ItemsController extends Controller
         {
             $item->name = $request->name;
             $item->price = $request->price;
+            $item->cost = $request->cost;
             $item->quantity = $request->quantity;
             $item->category_id = $request->category;
             $item->brand_id = $request->brand;
             $item->bar_code = $request->bar_code;
             $item->rate_id = $request->rate;
             $item->currency_id = $request->currency;
+            $item->counter_currency_id = $request->counter_currency;
             $item->save();
             DB::commit();
             return $this->index($request);
