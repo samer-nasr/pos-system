@@ -11,6 +11,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
     accounts: { name: string; id: number , code: string , type: string , description: string}[];
+    total: number
 }>();
 
 const goToCreateAccount = () => {
@@ -56,7 +57,8 @@ const editAccount = (accountId: number): void => {
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
             <h2 class="text-center text-xl font-semibold mb-4 text-gray-700">Account List</h2>
-
+            <h2 class="text-center text-xl font-semibold mb-4 text-gray-700">{{ props.total }}</h2>
+            
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-200 rounded-lg">
                     <thead>

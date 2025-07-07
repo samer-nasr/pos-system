@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Operation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Calculation\Engine\Operands\Operand;
 
@@ -14,8 +15,22 @@ class AccountController extends Controller
     {
         $accounts = Account::where('is_deleted' , 0)
                             ->get();
+
+        $total = Operation::where('is_deleted' , 0)
+                    ->where('origin', 'like', 'item')
+                    ->selectRaw("
+                        SUM(
+                            CASE 
+                                WHEN type = 'C' THEN amount
+                                WHEN type = 'D' THEN -amount
+                                ELSE 0
+                            END
+                        ) as total
+                    ")
+                    ->value('total');
         return Inertia::render('accounts/List', [
-            'accounts' => $accounts
+            'accounts' => $accounts,
+            'total' => $total
         ]);
     }
 
@@ -42,15 +57,20 @@ class AccountController extends Controller
     public function edit(Request $request, $id)
     {
         $account = Account::findOrFail($id);
-        $amount  = Operation::where('type' , 'like', 'C')
-                                // ->where('is_deleted' , 0)
-                                ->where('account_ref' , 'like' , $account->code)
-                                // ->where('origin_id' , $id)
-                                ->sum('amount'); 
+        $account_info = Operation::select([
+                                'account_ref',
+                                DB::raw('SUM(CASE WHEN type = "D" THEN amount ELSE 0 END) as total_debits'),
+                                DB::raw('SUM(CASE WHEN type = "C" THEN amount ELSE 0 END) as total_credits'),
+                                DB::raw('SUM(CASE WHEN type = "D" THEN amount ELSE 0 END) - SUM(CASE WHEN type = "C" THEN amount ELSE 0 END) as balance'),
+                            ])
+                            ->where('account_ref' , 'like' , $account->code)
+                            ->groupBy('account_ref')
+                            ->get()->first();
+        // dd($account_info->toArray());
 
         return Inertia::render('accounts/Edit' , [
             'account' => $account,
-            'amount' => $amount
+            'account_info' => $account_info
         ]);
     }
 

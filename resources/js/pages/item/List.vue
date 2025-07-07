@@ -26,6 +26,8 @@ const props = defineProps<{
             active: boolean;
         }[];
     };
+    total_items_price: string,
+    total_items_cost: string,
     filters: {
         search: string | null;
     };
@@ -66,11 +68,12 @@ const deleteItem = (itemsId: number): void => {
 };
 
 const editItem = (itemId: number): void => {
-    router.get(route('items.edit' , itemId));
+    router.get(route('items.edit', itemId));
 }
 </script>
 
 <template>
+
     <Head title="Items" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -78,21 +81,21 @@ const editItem = (itemId: number): void => {
             <h2 class="text-xl font-semibold text-center">Items</h2>
             <div class="flex justify-between px-4">
                 <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="goToCreateItem">
-                                    Create Item
+                    Create Item
                 </Button>
-                <input
-                    type="text"
-                    v-model="search"
-                    placeholder="Search items..."
-                    class="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring focus:border-blue-300 text-black"
-                />
+                <input type="text" v-model="search" placeholder="Search items..."
+                    class="border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring focus:border-blue-300 text-black" />
                 <Button size="sm" class="ms-4 w-40 bg-blue-800 text-white hover:bg-blue-700" @click="exportItem">
-                                        Export Items
+                    Export Items
                 </Button>
             </div>
         </div>
         <div class="flex flex-col gap-4 rounded-xl p-4 bg-white shadow-md mt-5">
-            <h2 class="text-center text-xl font-semibold mb-4 text-gray-700">Items List</h2>
+            <div class="flex justify-around text-black">
+                <h2><b>Total Items Price:</b> {{ props.total_items_price }}</h2>
+                <h2 class="text-center text-xl font-semibold mb-4 text-gray-700">Items List</h2>
+                <h2><b>Total Items Cost:</b> {{ props.total_items_cost }}</h2>
+            </div>
 
             <div class="overflow-x-auto">
                 <table class="min-w-full border-collapse border border-gray-200 rounded-lg">
@@ -107,12 +110,8 @@ const editItem = (itemId: number): void => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr 
-                            v-for="item in props.items.data" 
-                            :key="item.id"
-                            class="border border-gray-200 hover:bg-gray-50 transition odd:bg-white even:bg-gray-200"
-
-                        >
+                        <tr v-for="item in props.items.data" :key="item.id"
+                            class="border border-gray-200 hover:bg-gray-50 transition odd:bg-white even:bg-gray-200">
                             <td class="px-4 py-2 text-gray-700">{{ item.name }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ item.price }}</td>
                             <td class="px-4 py-2 text-gray-700">{{ item.quantity }}</td>
@@ -132,18 +131,12 @@ const editItem = (itemId: number): void => {
             </div>
             <!-- Pagination Links -->
             <div class="mt-4 flex flex-wrap justify-center gap-2">
-            <button
-                v-for="(link, index) in props.items.links"
-                :key="index"
-                :disabled="!link.url"
-                @click="goToPage(link.url)"
-                v-html="link.label"
-                :class="[
-                'px-3 py-1 border rounded text-sm',
-                link.active ? 'bg-blue-600 text-black' : 'bg-white text-black',
-                !link.url ? 'text-black cursor-not-allowed' : 'hover:bg-gray-400'
-                ]"
-            ></button>
+                <button v-for="(link, index) in props.items.links" :key="index" :disabled="!link.url"
+                    @click="goToPage(link.url)" v-html="link.label" :class="[
+                        'px-3 py-1 border rounded text-sm',
+                        link.active ? 'bg-blue-600 text-black' : 'bg-white text-black',
+                        !link.url ? 'text-black cursor-not-allowed' : 'hover:bg-gray-400'
+                    ]"></button>
             </div>
         </div>
     </AppLayout>

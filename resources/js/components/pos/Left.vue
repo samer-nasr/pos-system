@@ -192,7 +192,7 @@ onMounted(() => {
                     <button class="bg-black text-white py-2 border rounded" @click="clearInput">CLEAR</button>
                     <button class="bg-white text-black py-1 hover:bg-gray-300" @click="appendToInput('0')">0</button>
                     <!-- <button class="bg-black text-white py-2" @click="payCart">Pay</button> -->
-                    <button class="bg-black text-white py-2 border rounded" @click="openPaymentModal">Pay</button>
+                    <button class="bg-black text-white py-2 border rounded" @click="openPaymentModal">CASH IN</button>
                     </div>
                 </div>
                 <ConfirmPayment

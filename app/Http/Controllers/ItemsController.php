@@ -22,17 +22,31 @@ class ItemsController extends Controller
     {
         $search = $request->query('search');
 
-        $items = Items::with(['brand', 'category'])
-            ->when($search, function ($query, $search) {
-                $query->where('bar_code', 'like', $search);
-                $query->orWhere('name', 'like', '%' . $search . '%');
-            })
-            ->latest()
-            ->paginate(10)
-            ->appends(['search' => $search]); // Keep search in pagination links
+        $items = Items::with(['brand', 'category', 'currency']);
+
+        $total_items_cost = 0;
+        $total_items_price = 0;
+        foreach ($items->get() as $item) {
+            $total_items_cost += ($item->cost * $item->quantity);
+            $total_items_price += ($item->price * $item->quantity);
+        }
+        $currency_code = ($items->count() > 0) ? $items->first()->currency->name : 'USD';
+        $total_items_cost .= ' ' . $currency_code;
+        $total_items_price .= ' ' . $currency_code;
+
+        $items = $items->when($search, function ($query, $search) 
+                    {
+                        $query->where('bar_code', 'like', $search);
+                        $query->orWhere('name', 'like', '%' . $search . '%');
+                    })
+                        ->latest()
+                        ->paginate(3)
+                        ->appends(['search' => $search]); // Keep search in pagination links
 
         return Inertia::render('item/List', [
             'items' => $items,
+            'total_items_cost' => $total_items_cost,
+            'total_items_price' => $total_items_price,
             'filters' => [
                 'search' => $search,
             ]
@@ -44,27 +58,27 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('is_deleted' , DB::raw(0))
-                                ->where('is_deleted' , DB::raw(0))
-                                ->get();
-        $brands = Brand::where('is_deleted' , DB::raw(0))
-                                ->where('is_deleted' , DB::raw(0))
-                                ->get();
+        $categories = Category::where('is_deleted', DB::raw(0))
+            ->where('is_deleted', DB::raw(0))
+            ->get();
+        $brands = Brand::where('is_deleted', DB::raw(0))
+            ->where('is_deleted', DB::raw(0))
+            ->get();
         $rates = rate::where('is_deleted', 0)->get();
         $currencies = Currency::where('is_deleted', 0)->get();
         $counter_currencies = $currencies;
-        return Inertia::render('item/Create' , [
-            'categories' => $categories , 
+        return Inertia::render('item/Create', [
+            'categories' => $categories,
             'brands' => $brands,
             'rates' => $rates,
-            'currencies'=> $currencies,
-            'counter_currencies'=>$counter_currencies
+            'currencies' => $currencies,
+            'counter_currencies' => $counter_currencies
         ]);
     }
 
     public function export()
     {
-        $items = Items::with('brand' , 'category')->where('is_deleted' , DB::raw(0))->get();
+        $items = Items::with('brand', 'category')->where('is_deleted', DB::raw(0))->get();
         return Excel::download(new ItemExport($items), 'items.xlsx');
     }
 
@@ -76,10 +90,10 @@ class ItemsController extends Controller
         // dd($request->all());    
         $request->validate([
             'name' => 'required|string|max:50',
-            'price'=> 'required|numeric',
-            'cost'=> 'required|numeric',
-            'quantity'=> 'required|numeric',
-            'category'=> 'required|exists:categories,id|numeric',
+            'price' => 'required|numeric',
+            'cost' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'category' => 'required|exists:categories,id|numeric',
             // 'brand'=> 'required|exists:brands,id|numeric',
             'bar_code' => 'required|string|min:3|unique:items,bar_code',
             'rate' => 'nullable|exists:rates,id|numeric',
@@ -89,25 +103,22 @@ class ItemsController extends Controller
 
         DB::beginTransaction();
 
-        try
-        {
+        try {
             Items::create([
                 'name' => $request->name,
-                'price'=> $request->price,
-                'cost'=> $request->cost,
-                'quantity'=> $request->quantity,
-                'category_id'=>$request->category,
-                'brand_id'=>$request->brand,
-                'bar_code'=> $request->bar_code,
+                'price' => $request->price,
+                'cost' => $request->cost,
+                'quantity' => $request->quantity,
+                'category_id' => $request->category,
+                'brand_id' => $request->brand,
+                'bar_code' => $request->bar_code,
                 'rate_id' => $request->rate,
                 'currency_id' => $request->currency,
-                'counter_currency_id'=> $request->counter_currency
+                'counter_currency_id' => $request->counter_currency
             ]);
             DB::commit();
             return $this->index($request);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             dd($e);
             DB::rollBack();
         }
@@ -128,24 +139,24 @@ class ItemsController extends Controller
     {
         $item = Items::with('brand', 'category', 'rate', 'currency', 'counter_currency')->find($id);
 
-        $categories = Category::where('is_deleted' , DB::raw(0))
-                                ->where('is_deleted' , DB::raw(0))
-                                ->get();
-        $brands = Brand::where('is_deleted' , DB::raw(0))
-                                ->where('is_deleted' , DB::raw(0))
-                                ->get();
+        $categories = Category::where('is_deleted', DB::raw(0))
+            ->where('is_deleted', DB::raw(0))
+            ->get();
+        $brands = Brand::where('is_deleted', DB::raw(0))
+            ->where('is_deleted', DB::raw(0))
+            ->get();
         $rates = rate::where('is_deleted', 0)->get();
         $currencies = Currency::where('is_deleted', 0)->get();
         $counter_currencies = $currencies;
-        
+
 
         return Inertia::render('item/Edit', [
-            'item' => $item, 
-            'categories' => $categories , 
+            'item' => $item,
+            'categories' => $categories,
             'brands' => $brands,
-            'rates'=> $rates,
-            'currencies'=> $currencies,
-            'counter_currencies'=> $counter_currencies
+            'rates' => $rates,
+            'currencies' => $currencies,
+            'counter_currencies' => $counter_currencies
         ]);
     }
 
@@ -157,20 +168,19 @@ class ItemsController extends Controller
         // dd($request->all());
         $request->validate([
             'name' => 'required|string|max:50',
-            'price'=> 'required|numeric',
-            'cost'=> 'required|numeric',
-            'quantity'=> 'required|numeric',
-            'category'=> 'required|exists:categories,id|numeric',
-            'brand'=> 'required|exists:brands,id|numeric',
-            'rate'=> 'required|exists:rates,id|numeric',
-            'currency'=> 'required|exists:currencies,id|numeric',
-            'counter_currency'=> 'required|exists:currencies,id|numeric',
+            'price' => 'required|numeric',
+            'cost' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'category' => 'required|exists:categories,id|numeric',
+            'brand' => 'required|exists:brands,id|numeric',
+            'rate' => 'required|exists:rates,id|numeric',
+            'currency' => 'required|exists:currencies,id|numeric',
+            'counter_currency' => 'required|exists:currencies,id|numeric',
         ]);
 
         DB::beginTransaction();
 
-        try
-        {
+        try {
             $item->name = $request->name;
             $item->price = $request->price;
             $item->cost = $request->cost;
@@ -184,9 +194,7 @@ class ItemsController extends Controller
             $item->save();
             DB::commit();
             return $this->index($request);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             dd($e->getMessage());
             DB::rollBack();
         }
@@ -198,15 +206,12 @@ class ItemsController extends Controller
     public function destroy($id)
     {
         DB::beginTransaction();
-        try
-        {
+        try {
             $item = Items::find($id);
             $item->is_deleted = 1;
             $item->save();
             DB::commit();
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollBack();
             dd($e->getMessage());
         }

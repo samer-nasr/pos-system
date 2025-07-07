@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('rate_id');
             $table->unsignedBigInteger('cart_id');
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['paid', 'pending'])->default('paid');  
+            $table->enum('status', ['paid', 'pending'])->default('pending');  
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

@@ -7,6 +7,7 @@ import { LoaderCircle } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
 import InputError from '@/components/InputError.vue';
 import Swal from 'sweetalert2';
+import { computed } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,8 +18,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps<{
     account: { name: string; id: number , code: string};
-    amount : number
+    account_info : {balance: number , total_credits: number , total_debits: number};
 }>();
+
+const account_info = computed(() => {
+     return props.account_info ?? {
+        balance: 0,
+        total_credits: 0,
+        total_debits: 0
+      }; 
+});
 
 const form = useForm({
     code: props.account.code,
@@ -65,8 +74,20 @@ const submit = () => {
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="Amount">Amount</Label>
-                    <Input id="Amount" v-model:model-value="props.amount" type="text" required autofocus :tabindex="1" autocomplete="Amount" readonly placeholder="Amount" />
+                    <Label for="Amount">Total Credits</Label>
+                    <Input id="Amount" v-model:model-value="account_info.total_credits" type="text" required autofocus :tabindex="1" autocomplete="Amount" readonly placeholder="Amount" />
+                    <!-- <InputError :message="form.errors.code" /> -->
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="Amount">Total Debits</Label>
+                    <Input id="Amount" v-model:model-value="account_info.total_debits" type="text" required autofocus :tabindex="1" autocomplete="Amount" readonly placeholder="Amount" />
+                    <!-- <InputError :message="form.errors.code" /> -->
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="Amount">Balance</Label>
+                    <Input id="Amount" v-model:model-value="account_info.balance" type="text" required autofocus :tabindex="1" autocomplete="Amount" readonly placeholder="Amount" />
                     <!-- <InputError :message="form.errors.code" /> -->
                 </div>
 

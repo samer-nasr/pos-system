@@ -51,6 +51,7 @@ class DashboardController extends Controller
             $invoices = Invoice::with('cart' , 'cart.items' ,'cart.items.item.rate.currency', 'cart.items.item.rate.counter_currency')
                                     ->whereDate('created_at', Carbon::today())
                                     ->where('is_deleted' , 0)
+                                    ->where('status' , 'pending')
                                     ->where('user_id' , Auth::user()->id)
                                     ->get();
             if($invoices->count() != 0)
@@ -106,6 +107,7 @@ class DashboardController extends Controller
         $total_price    = $request->total_price;
         $rate_id        = $items[0]['rate_id'];
         $number_of_items= count($items);
+        $total_cost     = 0;
 
         // dd($items , $total_price, $number_of_items, $rate_id);
         
@@ -120,7 +122,7 @@ class DashboardController extends Controller
             $cart->user_id      = Auth::user()->id;
 
             $cart->save();
-
+            dd($items);
             foreach($items as $item)
             {
                 $db_item            = Items::find($item['id']);
@@ -146,15 +148,15 @@ class DashboardController extends Controller
 
             $invoice->save();
 
-            // create operation
-            $operation = new Operation();
-            $operation->user_id = Auth::user()->id;
-            $operation->invoice_id = $invoice->id;
-            $operation->type = 'C';
-            $operation->amount = $invoice->amount;
-            $operation->origin = 'Sale';
+            // // create operation
+            // $operation = new Operation();
+            // $operation->user_id = Auth::user()->id;
+            // $operation->invoice_id = $invoice->id;
+            // $operation->type = 'C';
+            // $operation->amount = $invoice->amount;
+            // $operation->origin = 'Sale';
 
-            $operation->save();
+            // $operation->save();
 
             DB::commit();
         }
@@ -168,23 +170,93 @@ class DashboardController extends Controller
 
     public function eotd(Request $request)
     {
-        $operations = Operation::where('user_id' , Auth::user()->id)
-                                ->whereDate('created_at' , Carbon::today())
-                                ->where('type' , 'C')
-                                ->where('origin' , 'Sale')
-                                ->get();
+        // $operations = Operation::with('invoice.cart.items.item')
+        //                         ->where('user_id' , Auth::user()->id)
+        //                         ->whereDate('created_at' , Carbon::today())
+        //                         ->where('type' , 'C')
+        //                         ->where('origin' , 'Sale')
+        //                         ->get();
+
+        $invoices_query = Invoice::where('is_deleted' , '=' , 0)
+                                ->where('user_id' , Auth::user()->id)
+                                ->where('status', 'pending')
+                                ->whereDate('created_at' , Carbon::today());
+        $invoices = $invoices_query->get();
+        $invoices_query->update(['status' => 'paid']);
+
+        // dd($operations->toArray());
+        $d = 0;
+        $c = 0;
+        foreach($invoices as $invoice)
+        {
+            // $invoice = $operation->invoice;
+            $cart = $invoice->cart;
+            $cart_items = $cart->items;
+            foreach($cart_items as $cart_item)
+            {
+                $quantity = $cart_item->quantity;
+                $item = $cart_item->item;
+                // add cash in drawer
+                $operation = new Operation();
+                $operation->amount = $item->price * $quantity;
+                $operation->account_ref = '1000';
+                $operation->type = 'D';
+                $operation->origin = 'item';
+                $operation->origin_id = $item->id;
+                $operation->user_id = 1;
+
+                $operation->save();
+                $d+=$operation->amount;
+
+                // add cash in income
+                $operation = new Operation();
+                $operation->amount = $item->price * $quantity;
+                $operation->account_ref = '4000';
+                $operation->type = 'C';
+                $operation->origin = 'item';
+                $operation->origin_id = $item->id;
+                $operation->user_id = 1;
+
+                $operation->save();
+                $c+=$operation->amount;
+
+                // add cash in expense item cost
+                $operation = new Operation();
+                $operation->amount = $item->cost * $quantity;
+                $operation->account_ref = '5000';
+                $operation->type = 'D';
+                $operation->origin = 'item';
+                $operation->origin_id = $item->id;
+                $operation->user_id = 1;
+
+                $operation->save();
+                $d+=$operation->amount;
+
+                // update stock inventory
+                $operation = new Operation();
+                $operation->amount = $item->cost * $quantity;
+                $operation->account_ref = '1020';
+                $operation->type = 'C';
+                $operation->origin = 'item';
+                $operation->origin_id = $item->id;
+                $operation->user_id = 1;
+
+                $operation->save();
+                $c+=$operation->amount;
+
+
+            }
+        }
+      
 
         // add the operation amounts to account 4000
-        $operation = new Operation();
-        $operation->amount = $operations->sum('amount');
-        // $operation->origin = 'account';
-        // $operation->origin_id = Account::where('code' , 'like' , '4000')->first()->id;
-        $operation->account_ref = '4000';
-        $operation->type = 'C';
-        $operation->user_id = Auth::user()->id;
-        // dd($operation);
+        // $operation = new Operation();
+        // $operation->amount = $operations->sum('amount');
+        // $operation->account_ref = '4000';
+        // $operation->type = 'C';
+        // $operation->user_id = Auth::user()->id;
 
-        $operation->save();
+        // $operation->save();
         // dd($operation->toArray());
     }
 
